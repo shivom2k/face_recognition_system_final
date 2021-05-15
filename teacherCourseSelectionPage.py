@@ -1,16 +1,20 @@
 from tkinter import *
 from tkinter import ttk  # ttk is used for styling
 from PIL import Image, ImageTk
+from main import face_recognition_system
+from tkinter import messagebox
+import mysql.connector
 
+from teacherMainPage import teacherMainPage
 
 class teacherCourseSelection:
-    def __init__(self, root):
+    def __init__(self, root,data):
         self.root = root
         self.root.geometry("1550x900+0+0")
         self.root.title("Face Recognition Attendance System")
-
+        self.mydata=data
         # ======= Variables ============
-
+        
         # img1 = main background
         img1 = Image.open("Images/Harvey.jpeg")
         img1 = img1.resize((1550, 900), Image.ANTIALIAS)
@@ -131,13 +135,22 @@ class teacherCourseSelection:
             state="readonly",
             width=18,
         )
+        li=[]
+
+        # for i in range(5,8):
+            
+        #     if data[i] != "":
+        #         li.append(data[i])
+        # length=len(li)
+
         course_combo["values"] = (
             "",
-            "UCS411 - AI",
-            "UCS414 - CN",
-            "UCS310 - DBMS",
-            "UMA035 - OT",
-            "UCS503 - SE",
+            data[5],
+            data[6],
+            data[7],
+            # "UCS310 - DBMS",
+            # "UMA035 - OT",
+            # "UCS503 - SE",
         )
         course_combo.current(0)  # to give the bydeafault index
 

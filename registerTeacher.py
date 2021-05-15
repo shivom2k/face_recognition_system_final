@@ -3,6 +3,13 @@ from tkinter import ttk
 import tkinter  # ttk is used for styling
 from PIL import Image, ImageTk
 from tkcalendar import Calendar, DateEntry
+from tkinter import messagebox
+
+import numpy as np
+import cv2
+import mysql.connector
+import os
+
 
 
 class teacherRegister:
@@ -217,7 +224,7 @@ class teacherRegister:
         # combo is used for dropdown like entering text
         course_3_combo = ttk.Combobox(
             register_frame,
-            textvariable=self.self.var_course3,
+            textvariable=self.var_course3,
             font=("times new roman", 15),
             state="readonly",
             width=18,
@@ -246,7 +253,7 @@ class teacherRegister:
 
         pass_entry = ttk.Entry(
             register_frame,
-            textvariable=var_password,
+            textvariable=self.var_password,
             width=22,
             font=("times new roman", 13),
         )
@@ -263,7 +270,7 @@ class teacherRegister:
 
         confirmPass_entry = ttk.Entry(
             register_frame,
-            textvariable=var_confirm_password,
+            textvariable=self.var_confirm_password,
             width=22,
             font=("times new roman", 13),
         )
@@ -274,7 +281,7 @@ class teacherRegister:
         # save button
         save_btn = Button(
             register_frame,
-            # command=self.add_data,
+            command=self.add_data,
             width=44,
             height=2,
             text="Save Details",
@@ -293,45 +300,51 @@ class teacherRegister:
             or self.var_phone.get() == ""
             or self.var_email.get() == ""
             or self.var_gender.get() == ""
-            or self.var_course1.get() == ""
-            or self.var_course2.get() == ""
-            or self.var_course3.get() == ""
+            # or self.var_course1.get() == ""
+            # or self.var_course2.get() == ""
+            # or self.var_course3.get() == ""
             or self.var_password.get() == ""
         ):
             messagebox.showerror("Error", "All Fields are required", parent=self.root)  # Messagebox to show the error and parent=self.root to show the message in the same window is any of the fields would be missing
         
         else: # Ab agar data aa jata hai to usse database mein save karna hai
-            try: # Now we will connect with SQL
-                conn = mysql.connector.connect(
-                    host="localhost",
-                    user="root",
-                    password="12345",
-                    database="face_recognition_db",
-                    auth_plugin="mysql_native_password",
-                )
-                my_cursor = conn.cursor() # To store the values given by the user
-                my_cursor.execute(
-                    "insert into student values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                    (
-                        self.var_id.get(),
-                        self.var_name.get(),                   
-                        self.var_phone.get(),
-                        self.var_email.get(),
-                        self.var_gender.get(),
-                        self.var_course1.get(),
-                        self.var_course2.get(),
-                        self.var_course3.get(),
-                        self.var_password.get()
-                    ),
-                )
-                conn.commit()
-                self.fetch_data()
-                conn.close() # Closing teh connection
-                messagebox.showinfo("Success","Student details have been added successfully", parent=self.root,) # To showthe sccess message on parent which is self.root
+            temp_cpass=self.var_confirm_password.get()
+            temp_pass=self.var_password.get()            
+            
+            if str(temp_cpass) == str(temp_pass):
                 
-            except Exception as es:
-                messagebox.showerror("Error", f"Due to : {str(es)}", parent=self.root)
-
+                try: # Now we will connect with SQL
+                    conn = mysql.connector.connect(
+                        host="localhost",
+                        user="root",
+                        password="Shiv@2000",
+                        database="face_recognition_db",
+                        auth_plugin="mysql_native_password",
+                    )
+                    my_cursor = conn.cursor() # To store the values given by the user
+                    my_cursor.execute(
+                        "insert into teacher values(%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                        (
+                            self.var_id.get(),
+                            self.var_name.get(),                   
+                            self.var_phone.get(),
+                            self.var_email.get(),
+                            self.var_gender.get(),
+                            self.var_course1.get(),
+                            self.var_course2.get(),
+                            self.var_course3.get(),
+                            self.var_password.get()
+                        ),
+                    )
+                    conn.commit()
+                    #self.fetch_data()
+                    conn.close() # Closing teh connection
+                    messagebox.showinfo("Success","Student details have been added successfully", parent=self.root) # To showthe sccess message on parent which is self.root
+                    
+                except Exception as es:
+                    messagebox.showerror("Error", f"Due to : {str(es)}", parent=self.root)
+            else:
+                messagebox.showerror("passwor does not match", parent=self.root)
 
 if __name__ == "__main__":
     root = Tk()

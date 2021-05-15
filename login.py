@@ -8,6 +8,7 @@ from forgot import forgot_password
 from registerStudent import studentRegister
 from registerTeacher import teacherRegister
 from studentMainPage import studentMainPage
+from teacherCourseSelectionPage import teacherCourseSelection
 
 class login:
     def __init__(self, root):
@@ -252,12 +253,27 @@ class login:
 
 
 
+           
+                ############################################ for teachers cursor 3#########################################3
+                if temp_mem == "Teacher":
+                    my_cursor2 = conn.cursor()
+                    sql="select * from teacher where email ={}".format(str(temp_email))
+                    print(sql)
+                    my_cursor2.execute(sql)          # To execute this query and store in mycursor
+                    data = my_cursor2.fetchall() # To fetch all the data
+                    self.my_data = list(data[0])
+                    print(self.my_data)
+
+
+
                 conn.commit()
                 #self.fetch_data()
                 conn.close() # Closing teh connection
+                    
                 
             except Exception as es:
-                messagebox.showerror("Error","User not registered", parent=self.root)
+                messagebox.showerror("Error","User not registered", parent=self.root)    
+
 
             if str(password[0][0])==str(temp_password):
                 if temp_table_name=="Admin":
@@ -268,6 +284,11 @@ class login:
                     # print(a)
                     self.new_window = Toplevel(self.root) # This asks where we want to open our window
                     self.app = studentMainPage(self.new_window, self.my_data)
+                elif temp_table_name=="Teacher":
+                    # a = self.roll_num
+                    # print(a)
+                    self.new_window = Toplevel(self.root) # This asks where we want to open our window
+                    self.app = teacherCourseSelection(self.new_window, self.my_data)
                 
             else:
                 messagebox.showerror("Error", "Invalid credentials", parent=self.root)
@@ -288,3 +309,4 @@ if __name__ == "__main__":
 # sphinxphoenix.adm@gmail.com
 # PUT ''''STUDENT'''' LOGIN
 # PUT ''''TEACHER'''' LOGIN
+# madaan.ujjwal05@gmail.com
