@@ -117,7 +117,7 @@ class teacherCourseSelection:
             state="readonly",
             width=18,
         )
-        batch_combo["values"] = ("", "2CS9", "2CS10", "2CS11", "2CS12")
+        batch_combo["values"] = ("", "2EE9", "2CS10", "2CS11", "2CS12")
         batch_combo.current(0)  # to give the bydeafault index
 
         batch_combo.place(x=275, y=150, anchor=NW)

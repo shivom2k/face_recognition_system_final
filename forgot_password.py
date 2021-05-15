@@ -161,7 +161,7 @@ class login:
                 conn = mysql.connector.connect(
                     host="localhost",
                     user="root",
-                    password="Shiv@2000",
+                    password="12345",
                     database="face_recogniser",
                     auth_plugin="mysql_native_password",
                 )

@@ -204,14 +204,14 @@ class login:
             temp_email = self.var_email.get()
             temp_password = self.var_password.get()
             temp_table_name = self.var_memType.get()
-            temp_mem=self.var_memType.get();
+            temp_mem=self.var_memType.get()
             password = ""
 
             try: # Now we will connect with SQL
                 conn = mysql.connector.connect(
                     host="localhost",
                     user="root",
-                    password="Shiv@2000",
+                    password="12345",
                     database="face_recognition_db",
                     auth_plugin="mysql_native_password",
                 )

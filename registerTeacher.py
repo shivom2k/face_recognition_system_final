@@ -317,7 +317,7 @@ class teacherRegister:
                     conn = mysql.connector.connect(
                         host="localhost",
                         user="root",
-                        password="Shiv@2000",
+                        password="12345",
                         database="face_recognition_db",
                         auth_plugin="mysql_native_password",
                     )
@@ -339,12 +339,12 @@ class teacherRegister:
                     conn.commit()
                     #self.fetch_data()
                     conn.close() # Closing teh connection
-                    messagebox.showinfo("Success","Student details have been added successfully", parent=self.root) # To showthe sccess message on parent which is self.root
+                    messagebox.showinfo("Success","Teacher details have been added successfully", parent=self.root) # To showthe sccess message on parent which is self.root
                     
                 except Exception as es:
                     messagebox.showerror("Error", f"Due to : {str(es)}", parent=self.root)
             else:
-                messagebox.showerror("passwor does not match", parent=self.root)
+                messagebox.showerror("password does not match", parent=self.root)
 
 if __name__ == "__main__":
     root = Tk()
