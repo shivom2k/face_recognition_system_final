@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import ttk  # ttk is used for styling
 from PIL import Image, ImageTk
 from tkinter import messagebox
+import pandas as pd
 import mysql.connector
 import os
 
@@ -32,6 +33,7 @@ class Student_attendance:
         self.var_fatherText = StringVar()
         self.var_motherText = StringVar()
         self.mydata=data
+        #self.df=""
         # self.var_rollNum.set("101916054")
         # self.var_name.set("Hello")
         # var_rollNumText.set("Hello")
@@ -58,6 +60,10 @@ class Student_attendance:
         bg_img = Label(self.root, image=self.photoimg1)
         bg_img.place(x=0, y=0, width=1550, height=900)
 
+        self.var_roll= StringVar()
+        self.var_status= StringVar()
+        self.var_date= StringVar()
+        self.var_time= StringVar()
         # title
         title_lbl = Label(
             bg_img,
@@ -106,7 +112,7 @@ class Student_attendance:
 
         rollNum_entry = ttk.Entry(
             upper_frame,
-            # textvariable=self.var_rollNum,
+            textvariable=self.var_roll,
             width=22,
             font=("times new roman", 13),
         )
@@ -115,7 +121,7 @@ class Student_attendance:
         # date
         date_label = Label(
             upper_frame,
-            text="Date  (dd/mm/yyyy)",
+            text="Date  (_dd_mm_yyyy)",
             font=("times new roman", 17),
             bg="white",
         )
@@ -123,7 +129,7 @@ class Student_attendance:
 
         date_entry = ttk.Entry(
             upper_frame,
-            # textvariable=self.var_rollNum,
+            textvariable=self.var_date,
             width=22,
             font=("times new roman", 13),
         )
@@ -141,7 +147,7 @@ class Student_attendance:
         # combo is used for dropdown like entering text
         status_combo = ttk.Combobox(
             upper_frame,
-            # textvariable=self.var_memType,
+            textvariable=self.var_status,
             font=("times new roman", 15),
             state="readonly",
             width=18,
@@ -154,7 +160,7 @@ class Student_attendance:
         # time
         time_label = Label(
             upper_frame,
-            text="Time (hh:mm) ",
+            text="Time (hh_mm) ",
             font=("times new roman", 17),
             bg="white",
         )
@@ -162,7 +168,7 @@ class Student_attendance:
 
         time_entry = ttk.Entry(
             upper_frame,
-            # textvariable=self.var_rollNum,
+            textvariable=self.var_time,
             width=22,
             font=("times new roman", 13),
         )
@@ -172,6 +178,7 @@ class Student_attendance:
 
         updateAttendance_btn = Button(
             upper_frame,
+            command=self.update_attendance,
             width=20,
             height=3,
             text="Update Student\n  Attendance",
@@ -266,32 +273,16 @@ class Student_attendance:
         exportAll_btn.place(x=1200, y=20)
 
         # =========Table frame=================
+
         table_frame = Frame(lower_frame, bd=3, bg="white", relief=SUNKEN)
         table_frame.place(x=5, y=100, width=1450, height=300)
 
         scroll_x = ttk.Scrollbar(table_frame, orient=HORIZONTAL)
         scroll_y = ttk.Scrollbar(table_frame, orient=VERTICAL)
-
+        tup=self.get_columns()
         self.student_table = ttk.Treeview(
             table_frame,
-            column=(
-               "Enroll no",
-               "Name",
-               "Year",
-               "Sem",
-               "Dep", 
-               "Batch",
-               "Email",
-               "Phone_no", 
-               "Father_no", 
-               "Mother_no",  
-               "Course1", 
-               "Course2", 
-               "Course3", 
-               "Course4",
-               "Gender",
-               "DOB"
-            ),
+            column=tup, 
             xscrollcommand=scroll_x.set,
             yscrollcommand=scroll_y.set,
         )
@@ -304,46 +295,51 @@ class Student_attendance:
 
         scroll_y.config(command=self.student_table.yview)
 
-        self.student_table.heading("Enroll no", text="Enroll no")
-        self.student_table.heading("Name", text="Name")
-        self.student_table.heading("Year", text="Year")
-        self.student_table.heading("Sem", text="Sem")
-        self.student_table.heading("Dep", text="Dep")
-        self.student_table.heading("Batch", text="Batch")
-        self.student_table.heading("Email", text="Email")
-        self.student_table.heading("Phone_no", text="Phone_no")
-        self.student_table.heading("Father_no", text="Father_no")
-        self.student_table.heading("Mother_no", text="Mother_no")
-        self.student_table.heading("Course1", text="Course1")
-        self.student_table.heading("Course2", text="Course2")
-        self.student_table.heading("Course3", text="Course3")
-        self.student_table.heading("Course4", text="Course4")
-        self.student_table.heading("Gender", text="Gender")
-        self.student_table.heading("DOB", text="DOB")
+        for i in range(len(tup)):
+            self.student_table.heading(tup[i], text=tup[i])
+
+        # self.student_table.heading(tup[0], text="Enroll no")
+        # self.student_table.heading(tup[1], text="Name")
+        # self.student_table.heading(tup[1], text="Year")
+        # self.student_table.heading(tup[1], text="Sem")
+        # self.student_table.heading(tup[1], text="Dep")
+        # self.student_table.heading(tup[1], text="Batch")
+        # self.student_table.heading(tup[1], text="Email")
+        # self.student_table.heading(tup[1], text="Phone_no")
+        # self.student_table.heading(tup[1], text="Father_no")
+        # self.student_table.heading("", text="Mother_no")
+        # self.student_table.heading("Course1", text="Course1")
+        # self.student_table.heading("Course2", text="Course2")
+        # self.student_table.heading("Course3", text="Course3")
+        # self.student_table.heading("Course4", text="Course4")
+        # self.student_table.heading("Gender", text="Gender")
+        # self.student_table.heading("DOB", text="DOB")
         self.student_table["show"] = "headings"
+        # for i in range(len(tup)):
+        #     self.student_table.column(tup[i], width=20)
 
-        self.student_table.column("Enroll no", width=100)
-        self.student_table.column("Name", width=100)
-        self.student_table.column("Year", width=100)
-        self.student_table.column("Sem", width=100) 
-        self.student_table.column("Dep", width=100)
-        self.student_table.column("Batch", width=100)
-        self.student_table.column("Email", width=100)
-        self.student_table.column("Phone_no", width=100)
-        self.student_table.column("Father_no", width=100)
-        # self.student_table.column("DOB", width=100)
-        # self.student_table.column("email", width=100)
-        # #self.student_table.column("email", width=200)
-        # self.student_table.column("phone_no", width=100)
-        # self.student_table.column("Father_contact", width=100)
-        self.student_table.column("Mother_no", width=100)
-        self.student_table.column("Course1", width=200)
-        self.student_table.column("Course2", width=200)
-        self.student_table.column("Course3", width=200)
-        self.student_table.column("Course4", width=200)
-        self.student_table.column("Gender", width=200)
-        self.student_table.column("DOB", width=200)
-
+        # self.student_table.column("Enroll no", width=100)
+        # self.student_table.column("Name", width=100)
+        # self.student_table.column("Year", width=100)
+        # self.student_table.column("Sem", width=100) 
+        # self.student_table.column("Dep", width=100)
+        # self.student_table.column("Batch", width=100)
+        # self.student_table.column("Email", width=100)
+        # self.student_table.column("Phone_no", width=100)
+        # self.student_table.column("Father_no", width=100)
+        # # self.student_table.column("DOB", width=100)
+        # # self.student_table.column("email", width=100)
+        # # #self.student_table.column("email", width=200)
+        # # self.student_table.column("phone_no", width=100)
+        # # self.student_table.column("Father_contact", width=100)
+        # self.student_table.column("Mother_no", width=100)
+        # self.student_table.column("Course1", width=200)
+        # self.student_table.column("Course2", width=200)
+        # self.student_table.column("Course3", width=200)
+        # self.student_table.column("Course4", width=200)
+        # self.student_table.column("Gender", width=200)
+        # self.student_table.column("DOB", width=200)
+ 
         self.student_table.pack(fill=BOTH, expand=1)
         #self.student_table.bind("<ButtonRelease>", self.get_cursor)
         self.fetch_data()
@@ -351,11 +347,35 @@ class Student_attendance:
     # ============================== Function Declaration ===================================#
 
     # =======================fetch data =================== #
+
+    def get_columns(self):    
+        year=self.mydata[0]
+        batch=self.mydata[2]
+        course=self.mydata[3]  
+        table_name=year +"_"+batch+"_"+course
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="Shiv@2000",
+            database="Face_Recognition_db",
+            auth_plugin="mysql_native_password",
+        )
+        my_cursor = conn.cursor()
+        sql1="select * from {}".format(str(table_name))
+        #my_cursor.execute(sql1)
+        df=pd.read_sql(sql1,con=conn)
+        # data = my_cursor.fetchall()
+        conn.commit()
+        conn.close()
+        column=df.columns
+        tup=tuple(column)
+        #print(tup)
+        return tup
     def fetch_data(self):
         year=self.mydata[0]
         batch=self.mydata[2]
         course=self.mydata[3]  
-        table_name=year +"_"+batch
+        table_name=year +"_"+batch+"_"+course
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
@@ -366,8 +386,9 @@ class Student_attendance:
         my_cursor = conn.cursor()
         sql1="select * from {}".format(str(table_name))
         my_cursor.execute(sql1)
+        #df=pd.read_sql(sql1,con=conn)
         data = my_cursor.fetchall()
-
+         
         if len(data) != 0:
             self.student_table.delete(*self.student_table.get_children())
             for i in data:
@@ -402,7 +423,52 @@ class Student_attendance:
     #     self.var_genderText.set(data[15])
     #     self.var_fatherText.set(data[8])
     #     self.var_motherText.set(data[9])
+    def update_attendance(self):
+        rol=self.var_roll.get()
+        rol="'"+rol+"'"
+        year=self.mydata[0]
+        batch=self.mydata[2]
+        course=self.mydata[3]  
+        table_name=year +"_"+batch+"_"+course
+        d1=self.var_date.get()+"_"+self.var_time.get()
+        status=self.var_status.get()
+        status="'"+status+"'"
+        # roll_no=se
+        # batch=self.var_batch.get()
+        # batch_no=self.var_batch_no.get()
+        # subject=self.var_subject.get()
+        # table_name=subject+"_"+batch+batch_no
+        # dat=self.var_dat.get()
+        # att=str(self.var_att.get())
+        # att="'"+att+"'"
+        try: 
+            conn = mysql.connector.connect(
+                    host="localhost",
+                    user="root",
+                    password="Shiv@2000",
+                    database="face_recognition_db",
+                    auth_plugin="mysql_native_password",
+                )
+            #query="UPDATE cn_2cs10 SET email = 'present' WHERE roll_no = %s "
+            #now = datetime.now()
+           
+            string="UPDATE {} SET {} = {} WHERE enroll_no = {} ".format(str(table_name),str(d1),str(status),str(rol))
+            print(string)
+            my_cursor = conn.cursor()
+            my_cursor.execute(string)
+            #my_cursor.execute(
+                #"UPDATE cn_2cs10 SET %s = %s WHERE roll_no = %s "%(d1),((str('present'),str(roll_num)),),)
+            
+    #         my_cursor = conn.cursor()
+    #         query="select * from {}".format(str(batch))
 
+    #         df=pd.read_sql(query,con=conn)
+    #         print(df)
+            conn.commit()
+            self.fetch_data()
+            conn.close()
+        except mysql.connector.Error as e:
+            print(e)      
 
 if __name__ == "__main__":
     root = Tk()

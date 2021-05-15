@@ -36,6 +36,8 @@ class Student:
         self.var_fatherText = StringVar()
         self.var_motherText = StringVar()
 
+       
+
         # self.var_rollNum.set("101916054")
         # self.var_name.set("Hello")
         # var_rollNumText.set("Hello")
