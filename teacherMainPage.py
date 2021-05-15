@@ -1,14 +1,18 @@
 from tkinter import *
 from tkinter import ttk  # ttk is used for styling
 from PIL import Image, ImageTk
-
+from main import face_recognition_system
+from tkinter import messagebox
+import mysql.connector
+from forgot import forgot_password
+from face_recognition import Face_Recognition
 
 class teacherMainPage:
-    def __init__(self, root):
+    def __init__(self, root,data):
         self.root = root
         self.root.geometry("1550x900+0+0")
         self.root.title("Face Recognition Attendance System")
-
+        self.mydata=data
         # ---- Variables --- #
 
         # img1 = main background
@@ -54,7 +58,7 @@ class teacherMainPage:
         bg_img.place(x=125, y=183, width=300, height=300)
 
         # img3 = Details image
-        img3 = Image.open("Images/id.png")
+        img3 = Image.open("Images/id.jpeg")
         img3 = img3.resize((300, 300), Image.ANTIALIAS)
         self.photoimg3 = ImageTk.PhotoImage(img3)
         bg_img = Label(self.root, image=self.photoimg3)
@@ -70,7 +74,7 @@ class teacherMainPage:
         # markAttendance button
         markAttendance_btn = Button(
             markAttendance_frame,
-            # command=self.add_data,
+            command=self.mark_attandance,
             width=25,
             height=6,
             text="Mark Attendance",
@@ -105,6 +109,13 @@ class teacherMainPage:
             fg="black",
         )
         editAttendance_btn.place(x=15, y=400, anchor=NW)
+    #==================function ============================================#
+
+    #====================mark attandance button ==============================#
+
+    def mark_attandance(self):
+        self.new_window = Toplevel(self.root) # This asks where we want to open our window
+        self.app = Face_Recognition(self.new_window, self.mydata)
 
 
 if __name__ == "__main__":

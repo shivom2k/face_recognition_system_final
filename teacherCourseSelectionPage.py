@@ -13,10 +13,11 @@ class teacherCourseSelection:
         self.root.title("Face Recognition Attendance System")
         self.mydata=data
         # ======= Variables ============
-        # self.var_ = StringVar()
-        # self.var_name = StringVar()
-        # self.var_name = StringVar()
-        # self.var_name = StringVar()
+        self.var_year = StringVar()
+        self.var_sem= StringVar()
+        self.var_batch = StringVar()
+        self.var_course = StringVar()
+        # self.mydata=[]
         
         # img1 = main background
         img1 = Image.open("Images/Harvey.jpeg")
@@ -57,7 +58,7 @@ class teacherCourseSelection:
         # combo is used for dropdown like entering text
         year_combo = ttk.Combobox(
             teacherCourseSelection_frame,
-            # textvariable=self.var_memType,
+            textvariable=self.var_year,
             font=("times new roman", 15),
             state="readonly",
             width=18,
@@ -79,7 +80,7 @@ class teacherCourseSelection:
         # combo is used for dropdown like entering text
         semester_combo = ttk.Combobox(
             teacherCourseSelection_frame,
-            # textvariable=self.var_memType,
+            textvariable=self.var_sem,
             font=("times new roman", 15),
             state="readonly",
             width=18,
@@ -111,7 +112,7 @@ class teacherCourseSelection:
         # combo is used for dropdown like entering text
         batch_combo = ttk.Combobox(
             teacherCourseSelection_frame,
-            # textvariable=self.var_memType,
+            textvariable=self.var_batch,
             font=("times new roman", 15),
             state="readonly",
             width=18,
@@ -133,7 +134,7 @@ class teacherCourseSelection:
         # combo is used for dropdown like entering text
         course_combo = ttk.Combobox(
             teacherCourseSelection_frame,
-            # textvariable=self.var_memType,
+            textvariable=self.var_course,
             font=("times new roman", 15),
             state="readonly",
             width=18,
@@ -164,7 +165,7 @@ class teacherCourseSelection:
         # teacherCourseSelection button
         teacherCourseSelection_btn = Button(
             bg_img,
-            # command=self.add_data,
+            command=self.course_selection,
             width=27,
             height=2,
             text="PROCEED",
@@ -176,10 +177,19 @@ class teacherCourseSelection:
         teacherCourseSelection_btn.place(x=650, y=520, anchor=NW)
 
     ################################3function =========================
-    def course_selection(Self):
-        data=[ self.va]
-        self.new_window = Toplevel(self.root) # This asks where we want to open our window
-        self.app = teacherMainPage(self.new_window, self.my_data) 
+    def course_selection(self):
+        if (
+            self.var_course.get() == ""
+            or self.var_batch.get() == ""
+            or self.var_sem.get() == ""
+            or self.var_year.get() == ""
+        ):
+            messagebox.showerror("Error", "All Fields are required", parent=self.root)
+        
+        else:  
+            data=[self.var_year.get(),self.var_sem.get(),self.var_batch.get(),self.var_course.get()]
+            self.new_window = Toplevel(self.root) # This asks where we want to open our window
+            self.app = teacherMainPage(self.new_window,data) 
        
 if __name__ == "__main__":
     root = Tk()

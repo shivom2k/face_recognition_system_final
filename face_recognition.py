@@ -8,20 +8,14 @@ import mysql.connector
 import os
 from time import strftime
 from datetime import datetime
-import pandas as pd
 
 
 class Face_Recognition:
-    def __init__(self, root):
+    def __init__(self, root,data):
         self.root = root
         self.root.geometry("1550x900+0+0")
         self.root.title("Face Recognition Attendance System")
-        self.var_batch= StringVar()
-        self.var_batch_no= StringVar()
-        self.var_subject= StringVar()
-        self.var_roll=StringVar()
-        self.var_att=StringVar()
-        self.var_dat=StringVar()
+        self.mydata=data
         title_lbl = Label(
             self.root,
             text="MARK ATTENDANCE",
@@ -32,107 +26,20 @@ class Face_Recognition:
         title_lbl.place(x=0, y=0, width=1550, height=45)
 
         # left image
-        #img1 = Image.open("Images/.jpeg")
-        img1 = Image.open("Images/face_recog.jpeg")
+        img1 = Image.open("Images/face_recog.png")
         img1 = img1.resize((675, 855), Image.ANTIALIAS)
         self.photoimg1 = ImageTk.PhotoImage(img1)
         bg_img = Label(self.root, image=self.photoimg1)
         bg_img.place(x=0, y=45, width=675, height=855)
 
         # right image
-        img2 = Image.open("Images/face_recog2.jpg")
+        img2 = Image.open("Images/face_recog2.png")
         img2 = img2.resize((875, 855), Image.ANTIALIAS)
         self.photoimg2 = ImageTk.PhotoImage(img2)
         bg_img = Label(self.root, image=self.photoimg2)
         bg_img.place(x=675, y=45, width=875, height=855)
-        # class student information
-        class_Student_frame = LabelFrame(
-             bg_img,
-            bd=3,
-            bg="white",
-            relief=SUNKEN,
-            text="Class Student Information",
-            font=("times new roman", 12, "bold"),
-        )
-        class_Student_frame.place(x=5, y=270, width=680, height=250)
-        #===============================================#====================
-        batch_combo = ttk.Combobox(
-            class_Student_frame,
-            textvariable=self.var_batch,
-            font=("times new roman", 15, "bold"),
-            state="readonly",
-            width=11,
-        )
-        batch_combo["values"] = ("Batch", "2CS", "COE", "EE")
-        batch_combo.current(0)  # to give the bydeafault index
-        batch_combo.grid(row=0, column=1, padx=3, pady=2, sticky=W)
-        #=========================================#=================================
-        batch_combo = ttk.Combobox(
-            class_Student_frame,
-            textvariable=self.var_batch_no,
-            font=("times new roman", 15, "bold"),
-            state="readonly",
-            width=11,
-        )
-        batch_combo["values"] = ("Batch_no", "10", "11", "12")
-        batch_combo.current(0)  # to give the bydeafault index
-        batch_combo.grid(row=0, column=2, padx=3, pady=2, sticky=W)
-        #=========================================#=================================
-        batch_combo = ttk.Combobox(
-            class_Student_frame,
-            textvariable=self.var_subject,
-            font=("times new roman", 15, "bold"),
-            state="readonly",
-            width=11,
-        )
-        batch_combo["values"] = ("subject", "DBMS", "CN")
-        batch_combo.current(0)  # to give the bydeafault index
-        batch_combo.grid(row=3, column=1, padx=3, pady=2, sticky=W)
-        #===============================================#====================
-        batch_combo = ttk.Combobox(
-            class_Student_frame,
-            textvariable=self.var_att,
-            font=("times new roman", 15, "bold"),
-            state="readonly",
-            width=11,
-        )
-        batch_combo["values"] = ("attendance", "present", "absent")
-        batch_combo.current(0)  # to give the bydeafault index
-        batch_combo.grid(row=1, column=2, padx=3, pady=2, sticky=W)
-         #studentid (roll no.)
-        studentId_label = Label(
-            class_Student_frame,
-            text="Roll No",
-            font=("times new roman", 17, "bold"),
-            bg="white",
-        )
-        studentId_label.grid(row=2, column=1, padx=3, pady=2, sticky=W)
 
-        studentID_entry = ttk.Entry(
-            class_Student_frame,
-            textvariable=self.var_roll,
-            width=15,
-            font=("times new roman", 13, "bold"),
-        )
-        studentID_entry.grid(row=2, column=2, padx=3, pady=2, sticky=W)
-         #date
-        studentId_label = Label(
-            class_Student_frame,
-            text="date in _DD_MM_YYYY",
-            font=("times new roman", 17, "bold"),
-            bg="white",
-        )
-        studentId_label.grid(row=4, column=1, padx=3, pady=2, sticky=W)
-
-        studentID_entry = ttk.Entry(
-            class_Student_frame,
-            textvariable=self.var_dat,
-            width=15,
-            font=("times new roman", 13, "bold"),
-        )
-        studentID_entry.grid(row=4, column=2, padx=3, pady=2, sticky=W)
-         
-        # mark attandance  button
+        # button
         b1_1 = Button(
             bg_img,
             command=self.face_recog,
@@ -142,193 +49,95 @@ class Face_Recognition:
             bg="white",
             fg="black",
         )
-        b1_1.place(x=0, y=600, width=200, height=40)
-        batch_combo.grid(row=1, column=1, padx=3, pady=2, sticky=W)
-        #  export button
-        b1_1 = Button(
-            bg_img,
-            command=self.export_attendance,
-            text="export_attendance",
-            cursor="hand2",
-            font=("times new roman", 18, "bold"),
-            bg="white",
-            fg="black",
-        )
-        b1_1.place(x=250, y=600, width=200, height=40)
-        batch_combo.grid(row=1, column=1, padx=3, pady=2, sticky=W)
-        # update attandance button
-        b1_1 = Button(
-            bg_img,
-            command=self.update_atendance,
-            text="update_attendance",
-            cursor="hand2",
-            font=("times new roman", 18, "bold"),
-            bg="white",
-            fg="black",
-        )
-        b1_1.place(x=500, y=600, width=200, height=40)
-    # ====================update_attandance =================#
-    def update_atendance(self):
-        roll_no=self.var_roll.get()
-        batch=self.var_batch.get()
-        batch_no=self.var_batch_no.get()
-        subject=self.var_subject.get()
-        table_name=subject+"_"+batch+batch_no
-        dat=self.var_dat.get()
-        att=str(self.var_att.get())
-        att="'"+att+"'"
+        b1_1.place(x=365, y=500, width=150, height=40)
 
+    # ==================Attendance =============================
+    # def mark_attendance(self, i):
+    #     with open("attendance.csv", "r+", newline="\n") as f:
+    #         myDataList = f.readlines()
+    #         name_list = []
+    #         for line in myDataList:
+    #             entry = line.split(",") # As we are creating a CSV file
+    #             name_list.append(entry[0]) # Iterating because of for loop
+    #             print(name_list)
+
+    #         if str(i) not in name_list: # To prevent re-writing
+    #             now = datetime.now()
+    #             d1 = now.strftime("%d/%m/%Y")
+    #             dtString = now.strftime("%H:%M:%S")
+    #             f.writelines(f"\n{i},{dtString},{d1},Present")
+    #====================create date=============================#
+
+    def create_date(self,batch,d1):
         try: 
             conn = mysql.connector.connect(
                     host="localhost",
                     user="root",
                     password="Shiv@2000",
-                    database="face_recognizer",
+                    database="face_recognition_db",
                     auth_plugin="mysql_native_password",
                 )
             #query="UPDATE cn_2cs10 SET email = 'present' WHERE roll_no = %s "
-            #now = datetime.now()
-            d1 = dat
-            string="UPDATE {} SET {} = {} WHERE roll_no = {} ".format(str(table_name),str(d1),str(att),str(roll_no))
+           
+            string="alter table {} add {} varchar(100) ".format(str(batch),str(d1))
             print(string)
             my_cursor = conn.cursor()
             my_cursor.execute(string)
-            #my_cursor.execute(
-                #"UPDATE cn_2cs10 SET %s = %s WHERE roll_no = %s "%(d1),((str('present'),str(roll_num)),),)
-            
-    #         my_cursor = conn.cursor()
-    #         query="select * from {}".format(str(batch))
-
-    #         df=pd.read_sql(query,con=conn)
-    #         print(df)
+   
             conn.commit()
             conn.close()
         except mysql.connector.Error as e:
-            print(e)            
-         
+            print(e)
+            
+    #=====================mark attendance=======================#
 
-        
-    # ==================Attendance =============================
-    def mark_attendance(self, i):
-        with open("attendance.csv", "r+", newline="\n") as f:
-            myDataList = f.readlines()
-            name_list = []
-            for line in myDataList:
-                entry = line.split(",")
-                name_list.append(entry[0])
-                print(name_list)
-
-            if str(i) not in name_list:
-                now = datetime.now()
-                d1 = now.strftime("%d/%m/%Y")
-                dtString = now.strftime("%H:%M:%S")
-                f.writelines(f"\n{i},{dtString},{d1},Present")
-    # =======================mark attandance==========================#
-    def mark__attendance(self,roll_num,batch):
+    def mark__attendance(self,roll_num,batch,d1):
         try: 
             conn = mysql.connector.connect(
                     host="localhost",
                     user="root",
                     password="Shiv@2000",
-                    database="face_recognizer",
+                    database="face_recognition_db",
                     auth_plugin="mysql_native_password",
                 )
             #query="UPDATE cn_2cs10 SET email = 'present' WHERE roll_no = %s "
-            now = datetime.now()
-            d1 = now.strftime("_%d_%m_%Y")
-            string="UPDATE {} SET {} = {} WHERE roll_no = {} ".format(str(batch),str(d1),str("'present'"),str(roll_num))
+            roll_num="'"+str(roll_num)+"'"
+            string="UPDATE {} SET {} = {} WHERE enroll_no = {} ".format(str(batch),str(d1),str("'present'"),str(roll_num))
             print(string)
             my_cursor = conn.cursor()
             my_cursor.execute(string)
-            #my_cursor.execute(
-                #"UPDATE cn_2cs10 SET %s = %s WHERE roll_no = %s "%(d1),((str('present'),str(roll_num)),),)
+            # my_cursor.execute(
+            #     "UPDATE cn_2cs10 SET %s = %s WHERE roll_no = %s "%(d1),((str('present'),str(roll_num)),),)
             
-    #         my_cursor = conn.cursor()
-    #         query="select * from {}".format(str(batch))
+            # my_cursor = conn.cursor()
+            # query="select * from {}".format(str(batch))
 
-    #         df=pd.read_sql(query,con=conn)
-    #         print(df)
+            # df=pd.read_sql(query,con=conn)
+            # print(df)
             conn.commit()
             conn.close()
         except mysql.connector.Error as e:
             print(e)   
 
-
-    #============== update_attendance#==========================================#
-    def export_attendance(self):
-        batch=self.var_batch.get()
-        batch_no=self.var_batch_no.get()
-        subject=self.var_subject.get()
-        table_name=subject+"_"+batch+batch_no
-        try: 
-            conn = mysql.connector.connect(
-                    host="localhost",
-                    user="root",
-                    password="Shiv@2000",
-                    database="face_recognizer",
-                    auth_plugin="mysql_native_password",
-                )
-          
-            query="select * from {}".format(str(table_name))
-
-            df=pd.read_sql(query,con=conn)
-            df.to_csv("./excel/Modified attendance.csv")
-
-            conn.commit()
-            conn.close()
-        except mysql.connector.Error as e:
-            print(e)        
-
-
-    #=======================create date=============================#
-
-    
-    def create_date(self,batch):
-        try: 
-            conn = mysql.connector.connect(
-                    host="localhost",
-                    user="root",
-                    password="Shiv@2000",
-                    database="face_recognizer",
-                    auth_plugin="mysql_native_password",
-                )
-            #query="UPDATE cn_2cs10 SET email = 'present' WHERE roll_no = %s "
-            now = datetime.now()
-            d1 = now.strftime("_%d_%m_%Y")
-            string="alter table {} add {} varchar(100) ".format(str(batch),str(d1))
-            print(string)
-            my_cursor = conn.cursor()
-            my_cursor.execute(string)
-            #my_cursor.execute(
-                #"UPDATE cn_2cs10 SET %s = %s WHERE roll_no = %s "%(d1),((str('present'),str(roll_num)),),)
-            
-    #         my_cursor = conn.cursor()
-    #         query="select * from {}".format(str(batch))
-    #         query="select * from {}".format(str(batch))
-
-    #         df=pd.read_sql(query,con=conn)
-    #         print(df)
-            conn.commit()
-            conn.close()
-        except mysql.connector.Error as e:
-            print(e)
-
-    # ==================Face Recognition =========================
+    # ==================Face Recognition =========================#
     def face_recog(self):
         recognizer = cv2.face.LBPHFaceRecognizer_create()
         recognizer.read("trainer/trainer.yml")
         cascadePath = "haarcascade_frontalface_default.xml"
         faceCascade = cv2.CascadeClassifier(cascadePath)
-        batch=self.var_batch.get()
-        batch_no=self.var_batch_no.get()
-        subject=self.var_subject.get()
-        table_name=subject+"_"+batch+batch_no
+        year=self.mydata[0]
+        
+        batch=self.mydata[2]
+        course=self.mydata[3]
+        
+        table_name=year +"_"+batch+"_"+course
         print(table_name)
-        
-        self.create_date(table_name)
-        #create_date(a)
+        now = datetime.now()
+        d1 = now.strftime("_%d_%m_%Y_%H_%M")
+        self.create_date(table_name,d1)
+
         font = cv2.FONT_HERSHEY_SIMPLEX
-        
+
         # iniciate id counter
         id = 0
 
@@ -393,8 +202,7 @@ class Face_Recognition:
                 # Check if confidence is less them 100 ==> "0" is perfect match
                 if confidence < 77:
                     confidence = "  {0}%".format(round(100 - confidence))
-                    self.mark__attendance(id,table_name)
-
+                    self.mark__attendance(id,table_name,d1)
                 else:
                     id = "unknown"
                     confidence = "  {0}%".format(round(100 - confidence))

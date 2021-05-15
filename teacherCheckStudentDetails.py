@@ -571,12 +571,12 @@ class Student:
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="ShadowWalker77",
+            password="Shiv@2000",
             database="Face_Recognition_db",
             auth_plugin="mysql_native_password",
         )
         my_cursor = conn.cursor()
-        my_cursor.execute("select * from student_table")
+        my_cursor.execute("select * from student")
         data = my_cursor.fetchall()
 
         if len(data) != 0:

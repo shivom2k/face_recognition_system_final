@@ -270,7 +270,7 @@ class Student:
 
         # =========Table frame=================
         table_frame = Frame(lower_frame, bd=3, bg="white", relief=SUNKEN)
-        table_frame.place(x=5, y=100, width=1450, height=395)
+        table_frame.place(x=5, y=100, width=1450, height=300)
 
         scroll_x = ttk.Scrollbar(table_frame, orient=HORIZONTAL)
         scroll_y = ttk.Scrollbar(table_frame, orient=VERTICAL)
@@ -350,12 +350,12 @@ class Student:
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="ShadowWalker77",
+            password="Shiv@2000",
             database="Face_Recognition_db",
             auth_plugin="mysql_native_password",
         )
         my_cursor = conn.cursor()
-        my_cursor.execute("select * from student_table")
+        my_cursor.execute("select * from student")
         data = my_cursor.fetchall()
 
         if len(data) != 0:
