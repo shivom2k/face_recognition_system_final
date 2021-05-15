@@ -6,6 +6,8 @@ from tkinter import messagebox
 import mysql.connector
 from forgot import forgot_password
 from face_recognition import Face_Recognition
+from teacherCheckStudentDetails import Student
+from teacherCheckAttendance import Student_attendance
 
 class teacherMainPage:
     def __init__(self, root,data):
@@ -87,7 +89,7 @@ class teacherMainPage:
         # details button
         details_btn = Button(
             details_frame,
-            # command=self.add_data,
+            command=self.student_details,
             width=25,
             height=6,
             text="Check Student Details",
@@ -100,7 +102,7 @@ class teacherMainPage:
         # editAttendance button
         editAttendance_btn = Button(
             editAttendance_frame,
-            # command=self.add_data,
+            command=self.attendance_details,
             width=25,
             height=6,
             text="Check / Edit Attendance",
@@ -116,7 +118,13 @@ class teacherMainPage:
     def mark_attandance(self):
         self.new_window = Toplevel(self.root) # This asks where we want to open our window
         self.app = Face_Recognition(self.new_window, self.mydata)
-
+    
+    def student_details(self):
+        self.new_window = Toplevel(self.root) # This asks where we want to open our window
+        self.app = Student(self.new_window, self.mydata)
+    def attendance_details(self):
+        self.new_window = Toplevel(self.root) # This asks where we want to open our window
+        self.app = Student_attendance(self.new_window, self.mydata)
 
 if __name__ == "__main__":
     root = Tk()

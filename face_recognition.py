@@ -79,7 +79,7 @@ class Face_Recognition:
                 )
             #query="UPDATE cn_2cs10 SET email = 'present' WHERE roll_no = %s "
            
-            string="alter table {} add {} varchar(100) ".format(str(batch),str(d1))
+            string="alter table {} add {} varchar(100) DEFAULT 'Absent' ".format(str(batch),str(d1))
             print(string)
             my_cursor = conn.cursor()
             my_cursor.execute(string)
@@ -126,10 +126,8 @@ class Face_Recognition:
         cascadePath = "haarcascade_frontalface_default.xml"
         faceCascade = cv2.CascadeClassifier(cascadePath)
         year=self.mydata[0]
-        
         batch=self.mydata[2]
-        course=self.mydata[3]
-        
+        course=self.mydata[3]  
         table_name=year +"_"+batch+"_"+course
         print(table_name)
         now = datetime.now()

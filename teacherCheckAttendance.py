@@ -1,6 +1,5 @@
 import numpy as np
 import cv2
-
 from tkinter import *
 from tkinter import ttk  # ttk is used for styling
 from PIL import Image, ImageTk
@@ -9,32 +8,30 @@ import mysql.connector
 import os
 
 
-class Student:
-    def __init__(self, root):
+class Student_attendance:  
+    def __init__(self, root,data):
         self.root = root
         self.root.geometry("1550x900+0+0")
         self.root.title("Face Recognition Attendance System")
 
         # ======= Variables ============
-        self.var_rollNum = StringVar()
-        self.var_name = StringVar()
-        var_rollNumText = StringVar()
-        var_nameText = StringVar()
-        var_yearText = StringVar()
-        var_semesterText = StringVar()
-        var_depText = StringVar()
-        var_batchText = StringVar()
-        var_emailText = StringVar()
-        var_phoneText = StringVar()
-        var_course1Text = StringVar()
-        var_course2Text = StringVar()
-        var_course3Text = StringVar()
-        var_course4Text = StringVar()
-        var_dobText = StringVar()
-        var_genderText = StringVar()
-        var_fatherText = StringVar()
-        var_motherText = StringVar()
-
+        self.var_rollNumText = StringVar()
+        self.var_nameText = StringVar()
+        self.var_yearText = StringVar()
+        self.var_semesterText = StringVar()
+        self.var_depText = StringVar()
+        self.var_batchText = StringVar()
+        self.var_emailText = StringVar()
+        self.var_phoneText = StringVar()
+        self.var_course1Text = StringVar()
+        self.var_course2Text = StringVar()
+        self.var_course3Text = StringVar()
+        self.var_course4Text = StringVar()
+        self.var_dobText = StringVar()
+        self.var_genderText = StringVar()
+        self.var_fatherText = StringVar()
+        self.var_motherText = StringVar()
+        self.mydata=data
         # self.var_rollNum.set("101916054")
         # self.var_name.set("Hello")
         # var_rollNumText.set("Hello")
@@ -278,21 +275,22 @@ class Student:
         self.student_table = ttk.Treeview(
             table_frame,
             column=(
-                "dep",
-                "course",
-                "year",
-                "sem",
-                "roll_no",
-                "name",
-                "batch",
-                "batch_no",
-                "gender",
-                "DOB",
-                "email",
-                "phone_no",
-                "Father_contact",
-                "Mother_contact",
-                "photo",
+               "Enroll no",
+               "Name",
+               "Year",
+               "Sem",
+               "Dep", 
+               "Batch",
+               "Email",
+               "Phone_no", 
+               "Father_no", 
+               "Mother_no",  
+               "Course1", 
+               "Course2", 
+               "Course3", 
+               "Course4",
+               "Gender",
+               "DOB"
             ),
             xscrollcommand=scroll_x.set,
             yscrollcommand=scroll_y.set,
@@ -306,47 +304,58 @@ class Student:
 
         scroll_y.config(command=self.student_table.yview)
 
-        self.student_table.heading("dep", text="Department")
-        self.student_table.heading("course", text="Course")
-        self.student_table.heading("year", text="Year")
-        self.student_table.heading("sem", text="Semester")
-        self.student_table.heading("roll_no", text="Roll No")
-        self.student_table.heading("name", text="Student Name")
-        self.student_table.heading("batch", text="Batch")
-        self.student_table.heading("batch_no", text="Batch No")
-        self.student_table.heading("gender", text="Gender")
-        self.student_table.heading("DOB", text="DOB(DD-MM-YYYY")
-        self.student_table.heading("email", text="Email (thapar.edu)")
-        self.student_table.heading("phone_no", text="Phone Number")
-        self.student_table.heading("Father_contact", text="Father's Ph.No")
-        self.student_table.heading("Mother_contact", text="Mother's Ph.No")
-        self.student_table.heading("photo", text="PhotoSampleStatus")
+        self.student_table.heading("Enroll no", text="Enroll no")
+        self.student_table.heading("Name", text="Name")
+        self.student_table.heading("Year", text="Year")
+        self.student_table.heading("Sem", text="Sem")
+        self.student_table.heading("Dep", text="Dep")
+        self.student_table.heading("Batch", text="Batch")
+        self.student_table.heading("Email", text="Email")
+        self.student_table.heading("Phone_no", text="Phone_no")
+        self.student_table.heading("Father_no", text="Father_no")
+        self.student_table.heading("Mother_no", text="Mother_no")
+        self.student_table.heading("Course1", text="Course1")
+        self.student_table.heading("Course2", text="Course2")
+        self.student_table.heading("Course3", text="Course3")
+        self.student_table.heading("Course4", text="Course4")
+        self.student_table.heading("Gender", text="Gender")
+        self.student_table.heading("DOB", text="DOB")
         self.student_table["show"] = "headings"
 
-        self.student_table.column("dep", width=120)
-        self.student_table.column("course", width=120)
-        self.student_table.column("year", width=120)
-        self.student_table.column("sem", width=120)
-        self.student_table.column("roll_no", width=120)
-        self.student_table.column("name", width=120)
-        self.student_table.column("batch", width=120)
-        self.student_table.column("batch_no", width=120)
-        self.student_table.column("gender", width=120)
-        self.student_table.column("DOB", width=150)
-        self.student_table.column("email", width=220)
-        self.student_table.column("phone_no", width=120)
-        self.student_table.column("Father_contact", width=120)
-        self.student_table.column("Mother_contact", width=120)
-        self.student_table.column("photo", width=200)
+        self.student_table.column("Enroll no", width=100)
+        self.student_table.column("Name", width=100)
+        self.student_table.column("Year", width=100)
+        self.student_table.column("Sem", width=100) 
+        self.student_table.column("Dep", width=100)
+        self.student_table.column("Batch", width=100)
+        self.student_table.column("Email", width=100)
+        self.student_table.column("Phone_no", width=100)
+        self.student_table.column("Father_no", width=100)
+        # self.student_table.column("DOB", width=100)
+        # self.student_table.column("email", width=100)
+        # #self.student_table.column("email", width=200)
+        # self.student_table.column("phone_no", width=100)
+        # self.student_table.column("Father_contact", width=100)
+        self.student_table.column("Mother_no", width=100)
+        self.student_table.column("Course1", width=200)
+        self.student_table.column("Course2", width=200)
+        self.student_table.column("Course3", width=200)
+        self.student_table.column("Course4", width=200)
+        self.student_table.column("Gender", width=200)
+        self.student_table.column("DOB", width=200)
 
         self.student_table.pack(fill=BOTH, expand=1)
-        self.student_table.bind("<ButtonRelease>", self.get_cursor)
+        #self.student_table.bind("<ButtonRelease>", self.get_cursor)
         self.fetch_data()
 
     # ============================== Function Declaration ===================================#
 
     # =======================fetch data =================== #
     def fetch_data(self):
+        year=self.mydata[0]
+        batch=self.mydata[2]
+        course=self.mydata[3]  
+        table_name=year +"_"+batch
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
@@ -355,7 +364,8 @@ class Student:
             auth_plugin="mysql_native_password",
         )
         my_cursor = conn.cursor()
-        my_cursor.execute("select * from student")
+        sql1="select * from {}".format(str(table_name))
+        my_cursor.execute(sql1)
         data = my_cursor.fetchall()
 
         if len(data) != 0:
@@ -371,31 +381,30 @@ class Student:
 
     # ======================= get cursor =================#
 
-    def get_cursor(self, event=""):
-        cursor_focus = self.student_table.focus()
-        content = self.student_table.item(cursor_focus)
-        data = content["values"]
-
-        self.var_dep.set(data[0]),
-        self.var_course.set(data[1]),
-        self.var_year.set(data[2]),
-        self.var_semester.set(data[3]),
-        self.var_rollNum.set(data[4]),
-        self.var_std_name.set(data[5]),
-        self.var_batch.set(data[6]),
-        self.var_batchNum.set(data[7]),
-        self.var_gender.set(data[8]),
-        self.var_dob.set(data[9]),
-        self.var_email.set(data[10]),
-        self.var_phone.set(data[11]),
-        self.var_fatherNum.set(data[12]),
-        self.var_motherNum.set(data[13]),
-        self.var_radioButton1.set(data[14]),
-
-        self.var_stdIdforImage = str(data[4])
+    # def get_cursor(self, event=""):
+    #     cursor_focus = self.student_table.focus()
+    #     content = self.student_table.item(cursor_focus)
+    #     data = content["values"]
+    
+    #     self.var_rollNumText.set(data[0])
+    #     self.var_nameText.set(data[1])
+    #     self.var_yearText.set(data[2])
+    #     self.var_semesterText.set(data[3])
+    #     self.var_depText.set(data[4])
+    #     self.var_batchText.set(data[5])
+    #     self.var_emailText.set(data[6])
+    #     self.var_phoneText.set(data[7])
+    #     self.var_course1Text.set(data[11])
+    #     self.var_course2Text.set(data[12])
+    #     self.var_course3Text.set(data[13])
+    #     self.var_course4Text.set(data[14])
+    #     self.var_dobText.set(data[16])
+    #     self.var_genderText.set(data[15])
+    #     self.var_fatherText.set(data[8])
+    #     self.var_motherText.set(data[9])
 
 
 if __name__ == "__main__":
     root = Tk()
-    obj = Student(root)
+    obj = Student_attendance(root)
     root.mainloop()
