@@ -47,14 +47,14 @@ class teacherMainPage:
         details_frame.config(highlightbackground="black", highlightcolor="black")
 
         # img2 = markAttendance image
-        img2 = Image.open("Images/ai.jpeg")
+        img2 = Image.open("Images/ai.png")
         img2 = img2.resize((300, 300), Image.ANTIALIAS)
         self.photoimg2 = ImageTk.PhotoImage(img2)
         bg_img = Label(self.root, image=self.photoimg2)
         bg_img.place(x=125, y=183, width=300, height=300)
 
         # img3 = Details image
-        img3 = Image.open("Images/id.jpeg")
+        img3 = Image.open("Images/id.png")
         img3 = img3.resize((300, 300), Image.ANTIALIAS)
         self.photoimg3 = ImageTk.PhotoImage(img3)
         bg_img = Label(self.root, image=self.photoimg3)

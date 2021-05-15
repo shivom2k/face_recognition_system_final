@@ -4,7 +4,6 @@ from PIL import Image, ImageTk
 from main import face_recognition_system
 from tkinter import messagebox
 import mysql.connector
-
 from teacherMainPage import teacherMainPage
 
 class teacherCourseSelection:
@@ -14,6 +13,10 @@ class teacherCourseSelection:
         self.root.title("Face Recognition Attendance System")
         self.mydata=data
         # ======= Variables ============
+        # self.var_ = StringVar()
+        # self.var_name = StringVar()
+        # self.var_name = StringVar()
+        # self.var_name = StringVar()
         
         # img1 = main background
         img1 = Image.open("Images/Harvey.jpeg")
@@ -172,7 +175,12 @@ class teacherCourseSelection:
 
         teacherCourseSelection_btn.place(x=650, y=520, anchor=NW)
 
-
+    ################################3function =========================
+    def course_selection(Self):
+        data=[ self.va]
+        self.new_window = Toplevel(self.root) # This asks where we want to open our window
+        self.app = teacherMainPage(self.new_window, self.my_data) 
+       
 if __name__ == "__main__":
     root = Tk()
     obj = teacherCourseSelection(root)
