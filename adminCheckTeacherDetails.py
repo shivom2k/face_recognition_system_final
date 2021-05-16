@@ -176,11 +176,12 @@ class adminCheckTeacherDetails:
         )
         course_1_combo["values"] = (
             "",
-            "UCS411 - AI",
-            "UCS414 - CN",
-            "UCS310 - DBMS",
-            "UMA035 - OT",
-            "UCS503 - SE",
+            "UCS411_AI",
+            "UCS414_CN",
+            "UCS310_DBMS",
+            "UMA035_OT",
+            "UCS503_SE",
+            "ECE202_Elec"
         )
         course_1_combo.current(0)  # to give the bydeafault index
 
@@ -205,11 +206,12 @@ class adminCheckTeacherDetails:
         )
         course_2_combo["values"] = (
             "",
-            "UCS411 - AI",
-            "UCS414 - CN",
-            "UCS310 - DBMS",
-            "UMA035 - OT",
-            "UCS503 - SE",
+            "UCS411_AI",
+            "UCS414_CN",
+            "UCS310_DBMS",
+            "UMA035_OT",
+            "UCS503_SE",
+            "ECE202_Elec"
         )
         course_2_combo.current(0)  # to give the bydeafault index
 
@@ -234,11 +236,12 @@ class adminCheckTeacherDetails:
         )
         course_3_combo["values"] = (
             "",
-            "UCS411 - AI",
-            "UCS414 - CN",
-            "UCS310 - DBMS",
-            "UMA035 - OT",
-            "UCS503 - SE",
+            "UCS411_AI",
+            "UCS414_CN",
+            "UCS310_DBMS",
+            "UMA035_OT",
+            "UCS503_SE",
+            "ECE202_Elec"
         )
         course_3_combo.current(0)  # to give the bydeafault index
 

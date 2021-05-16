@@ -9,6 +9,7 @@ from registerStudent import studentRegister
 from registerTeacher import teacherRegister
 from studentMainPage import studentMainPage
 from teacherCourseSelectionPage import teacherCourseSelection
+from adminMainPage import adminMainPage
 
 class login:
     def __init__(self, root):
@@ -296,6 +297,10 @@ class login:
     def forgot_details(self):
         self.new_window = Toplevel(self.root) # This asks where we want to open our window
         self.app = forgotPassword(self.new_window)
+
+    def admin_page(self):
+        self.new_window = Toplevel(self.root) # This asks where we want to open our window
+        self.app = adminMainPage(self.new_window)
 
         
 

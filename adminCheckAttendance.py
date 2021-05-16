@@ -1,7 +1,11 @@
 from tkinter import *
 from tkinter import ttk  # ttk is used for styling
 from PIL import Image, ImageTk
-
+from tkinter import messagebox
+import mysql.connector
+from tkinter import filedialog
+import pandas as pd
+import os
 
 class adminCheckAttendance:
     def __init__(self, root):
@@ -10,6 +14,10 @@ class adminCheckAttendance:
         self.root.title("Face Recognition Attendance System")
 
         # ======= Variables ============
+        self.var_year = StringVar()
+        self.var_sem = StringVar()
+        self.var_batch = StringVar()
+        self.var_course = StringVar()
 
         # img1 = main background
         img1 = Image.open("Images/Harvey.jpeg")
@@ -46,7 +54,7 @@ class adminCheckAttendance:
         # combo is used for dropdown like entering text
         year_combo = ttk.Combobox(
             attendance_frame,
-            # textvariable=self.var_memType,
+            textvariable=self.var_year,
             font=("times new roman", 15),
             state="readonly",
             width=18,
@@ -68,7 +76,7 @@ class adminCheckAttendance:
         # combo is used for dropdown like entering text
         semester_combo = ttk.Combobox(
             attendance_frame,
-            # textvariable=self.var_memType,
+            textvariable=self.var_sem,
             font=("times new roman", 15),
             state="readonly",
             width=18,
@@ -100,12 +108,12 @@ class adminCheckAttendance:
         # combo is used for dropdown like entering text
         batch_combo = ttk.Combobox(
             attendance_frame,
-            # textvariable=self.var_memType,
+            textvariable=self.var_batch,
             font=("times new roman", 15),
             state="readonly",
             width=18,
         )
-        batch_combo["values"] = ("", "2CS9", "2CS10", "2CS11", "2CS12")
+        batch_combo["values"] = ("", "2EE9", "2CS10", "2CS11", "2CS12")
         batch_combo.current(0)  # to give the bydeafault index
 
         batch_combo.place(x=275, y=150, anchor=NW)
@@ -122,18 +130,20 @@ class adminCheckAttendance:
         # combo is used for dropdown like entering text
         course_combo = ttk.Combobox(
             attendance_frame,
-            # textvariable=self.var_memType,
+            textvariable=self.var_course,
             font=("times new roman", 15),
             state="readonly",
             width=18,
         )
         course_combo["values"] = (
             "",
-            "UCS411 - AI",
-            "UCS414 - CN",
-            "UCS310 - DBMS",
-            "UMA035 - OT",
-            "UCS503 - SE",
+            "UCS411_AI",
+            "UCS414_CN",
+            "UCS310_DBMS",
+            "UMA035_OT",
+            "UCS503_SE",
+            "ECE202_Elec"
+
         )
         course_combo.current(0)  # to give the bydeafault index
 
@@ -144,7 +154,7 @@ class adminCheckAttendance:
         # adminCheckAttendance button
         adminCheckAttendance_btn = Button(
             bg_img,
-            # command=self.add_data,
+            command=self.export_data,
             width=27,
             height=2,
             text="EXPORT ATTENDANCE",
@@ -154,6 +164,114 @@ class adminCheckAttendance:
         )
 
         adminCheckAttendance_btn.place(x=650, y=520, anchor=NW)
+
+    # Functions
+    def export_data(self):
+        if (self.var_course.get()==""
+            or self.var_year.get() == ""
+            or self.var_batch.get() == ""
+            or self.var_sem.get() == ""
+            ):
+            messagebox.showerror("Error", "Enter all the fields", parent=self.root)
+
+        else:
+            year = self.var_year.get()
+            batch = self.var_batch.get()
+            course = self.var_course.get()
+            
+            # roll = self.var_rollNumText
+            # roll = "'" + self.var_rollNumText.get() + "'"
+            table_name =   year + "_" + batch + "_" + course
+
+            try: # Now we will connect with SQL
+                conn = mysql.connector.connect(
+                    host="localhost",
+                    user="root",
+                    password="12345",
+                    database="face_recognition_db",
+                    auth_plugin="mysql_native_password",
+                )
+
+                # ===================cursor 0============================= --- Getting the columns
+                # my_cursor = conn.cursor() 
+                sql = 'select * from {}'.format(str(table_name))
+                df=pd.read_sql(sql,con=conn)
+                #  df.to_csv("ai.csv")
+
+                conn.commit()
+                #self.fetch_data()
+                conn.close() 
+
+                # my_cursor.execute('describe student') ############################################## Insert the table name
+                # data = my_cursor.fetchall()
+                # print(data)
+
+                
+                
+                # for i in range(len(data)):
+                #     self.column_list.append(data[i][0])
+
+                # print(self.column_list)
+
+                # #===================cursor 1============================= --- Getting the student data
+                # my_cursor1 = conn.cursor() # To store the values given by the user
+                
+                # sql = 'select * from student where Enroll_no={}'.format(str(roll))  ############################################## Insert the table name
+                # print(sql)
+                # my_cursor1.execute(sql)
+                # info = my_cursor1.fetchall()
+                # print("Info ",info)
+
+                # self.new_data = list(info[0])
+                # print(self.new_data)
+
+
+                # ### Converting those two lists to dataframe
+                # df = pd.DataFrame([self.new_data], columns = self.column_list)
+                # print(df)
+
+
+                #myData=df.values.tolist()
+
+                try:
+                    # if len(myData) < 1:
+                    #     messagebox.showerror(
+                    #         "No Data", "No Data Found To Export", parent=self.root
+                    #     )
+                    #     return False
+
+                    fln = filedialog.asksaveasfilename(
+                        initialdir=os.getcwd(),
+                        title="Open CSV",
+                        filetypes=[("csv", ".CSV")],
+
+                        #filetypes=(("CSV File", "*.csv"), ("All File", "*.*")),
+                        parent=self.root,
+                    )
+                    fln=fln+".csv"
+                    df.to_csv(fln,index=False)
+                    # with open(fln, mode="w", newline="") as myfile:
+                    #     #myfile=myfile+".csv"
+                    #     # exp_write = csv.writer(myfile, delimiter=",")
+                    #     # for i in myData:
+                    #     #     exp_write.writerow(i)
+                    messagebox.showinfo(
+                        "Data Exported",
+                        "Your Data Exported to " + os.path.basename(fln) + " successfully", parent=self.root
+                    )
+
+                except Exception as es:
+                    messagebox.showerror("Error", f"Due to : {str(es)}", parent=self.root)
+                #df.to_csv('Cou.csv', index = False)
+
+         
+
+
+                
+                
+            except Exception as es:
+                messagebox.showerror("Error","User not registered", parent=self.root)
+
 
 
 if __name__ == "__main__":
