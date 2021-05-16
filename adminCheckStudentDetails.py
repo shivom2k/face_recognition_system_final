@@ -677,22 +677,7 @@ class adminCheckStudentDetails:
         self.student_table = ttk.Treeview(
             table_frame,
             column=(
-               "Enroll_no",
-               "Name",
-               "Year",
-               "Sem",
-               "Dep", 
-               "Batch",
-               "Email",
-               "Phone_no", 
-               "Father_no", 
-               "Mother_no",  
-               "Course1", 
-               "Course2", 
-               "Course3", 
-               "Course4",
-               "Gender",
-               "DOB",
+              
             #    "Image"
             ),
             xscrollcommand=scroll_x.set,
