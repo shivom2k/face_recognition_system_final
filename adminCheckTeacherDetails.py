@@ -179,11 +179,12 @@ class adminCheckTeacherDetails:
         )
         course_1_combo["values"] = (
             "",
-            "UCS411 - AI",
-            "UCS414 - CN",
-            "UCS310 - DBMS",
-            "UMA035 - OT",
-            "UCS503 - SE",
+            "UCS411_AI",
+            "UCS414_CN",
+            "UCS310_DBMS",
+            "UMA035_OT",
+            "UCS503_SE",
+            "ECE202_Elec"
         )
         course_1_combo.current(0)  # to give the bydeafault index
 
@@ -208,11 +209,12 @@ class adminCheckTeacherDetails:
         )
         course_2_combo["values"] = (
             "",
-            "UCS411 - AI",
-            "UCS414 - CN",
-            "UCS310 - DBMS",
-            "UMA035 - OT",
-            "UCS503 - SE",
+            "UCS411_AI",
+            "UCS414_CN",
+            "UCS310_DBMS",
+            "UMA035_OT",
+            "UCS503_SE",
+            "ECE202_Elec"
         )
         course_2_combo.current(0)  # to give the bydeafault index
 
@@ -237,11 +239,12 @@ class adminCheckTeacherDetails:
         )
         course_3_combo["values"] = (
             "",
-            "UCS411 - AI",
-            "UCS414 - CN",
-            "UCS310 - DBMS",
-            "UMA035 - OT",
-            "UCS503 - SE",
+            "UCS411_AI",
+            "UCS414_CN",
+            "UCS310_DBMS",
+            "UMA035_OT",
+            "UCS503_SE",
+            "ECE202_Elec"
         )
         course_3_combo.current(0)  # to give the bydeafault index
 
@@ -493,14 +496,71 @@ class adminCheckTeacherDetails:
 
     # ============================== Function Declaration ===================================#
 
-    
+    def add_data(self):
+        if (
+            self.var_dep.get() == "Select Department"
+            or self.var_course.get() == "Select Course"
+            or self.var_year.get() == "Select Year"
+            or self.var_semester.get() == "Select Semester"
+            or self.var_rollNum.get() == ""
+            or self.var_std_name.get() == ""
+            or self.var_batch.get() == ""
+            or self.var_batchNum.get() == ""
+            or self.var_dob.get() == ""
+            or self.var_email.get() == ""
+            or self.var_phone.get() == ""
+        ):
+            messagebox.showerror("Error", "All Fields are required", parent=self.root)
+        else:
+            try:
+                conn = mysql.connector.connect(
+                    host="localhost",
+                    user="root",
+                    password="12345",
+                    database="Face_Recognition_db",
+                    auth_plugin="mysql_native_password",
+                )
+                my_cursor = conn.cursor()
+                my_cursor.execute(
+                    "insert into student_table values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                    (
+                        self.var_dep.get(),
+                        self.var_course.get(),
+                        self.var_year.get(),
+                        self.var_semester.get(),
+                        self.var_rollNum.get(),
+                        self.var_std_name.get(),
+                        self.var_batch.get(),
+                        self.var_batchNum.get(),
+                        self.var_gender.get(),
+                        self.var_dob.get(),
+                        self.var_email.get(),
+                        self.var_phone.get(),
+                        self.var_fatherNum.get(),
+                        self.var_motherNum.get(),
+                        self.var_radioButton1.get(),
+                    ),
+                )
+                conn.commit()
+                self.fetch_data()
+                conn.close()
+                messagebox.showinfo(
+                    "Success",
+                    "Student details have been added successfully",
+                    parent=self.root,
+                )
+            except Exception as es:
+                messagebox.showerror("Error", f"Due to : {str(es)}", parent=self.root)
+
 
     # =======================fetch data =================== #
     def fetch_data(self):
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
+
             password="Shiv@2000",
+
             database="Face_Recognition_db",
             auth_plugin="mysql_native_password",
         )
@@ -602,8 +662,11 @@ class adminCheckTeacherDetails:
                     conn = mysql.connector.connect(
                         host="localhost",
                         user="root",
+
+                      
                         password="Shiv@2000",
                         database="face_recognition_db",
+
                         auth_plugin="mysql_native_password",
                     )
 
@@ -673,8 +736,10 @@ class adminCheckTeacherDetails:
                     conn = mysql.connector.connect(
                         host="localhost",
                         user="root",
+
                         password="Shiv@2000",
                         database="face_recognition_db",
+
                         auth_plugin="mysql_native_password",
                     )
 
