@@ -504,7 +504,7 @@ class adminCheckTeacherDetails:
                 conn = mysql.connector.connect(
                     host="localhost",
                     user="root",
-                    password="ShadowWalker77",
+                    password="12345",
                     database="Face_Recognition_db",
                     auth_plugin="mysql_native_password",
                 )
@@ -545,7 +545,7 @@ class adminCheckTeacherDetails:
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="ShadowWalker77",
+            password="12345",
             database="Face_Recognition_db",
             auth_plugin="mysql_native_password",
         )
@@ -616,7 +616,7 @@ class adminCheckTeacherDetails:
                     conn = mysql.connector.connect(
                         host="localhost",
                         user="root",
-                        password="ShadowWalker77",
+                        password="12345",
                         database="Face_Recognition_db",
                         auth_plugin="mysql_native_password",
                     )
@@ -670,7 +670,7 @@ class adminCheckTeacherDetails:
                     conn = mysql.connector.connect(
                         host="localhost",
                         user="root",
-                        password="ShadowWalker77",
+                        password="12345",
                         database="Face_Recognition_db",
                         auth_plugin="mysql_native_password",
                     )
@@ -736,7 +736,7 @@ class adminCheckTeacherDetails:
                     conn = mysql.connector.connect(
                         host="localhost",
                         user="root",
-                        password="ShadowWalker77",
+                        password="12345",
                         database="Face_Recognition_db",
                         auth_plugin="mysql_native_password",
                     )

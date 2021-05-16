@@ -915,7 +915,7 @@ class adminCheckStudentDetails:
         self.var_name.set(data[1]) ,
         self.var_year.set(data[2]) ,
         self.var_semester.set(data[3]),
-        self.var_dep.set([data[4]]),
+        self.var_dep.set(data[4]),
         self.var_batch.set(data[5]),
         self.var_email.set(data[6]) ,
         self.var_phone.set(data[7]) ,
@@ -1424,140 +1424,140 @@ class adminCheckStudentDetails:
     #                         self.var_phone.get() ,
     #                         # self.var_password = Str
     #                         # self.var_confirm_passwo
-    #                         self.var_fatherNum.get(),
-    #                         self.var_motherNum.get(),
-    #                         self.var_course1.get(),
-    #                         self.var_course2.get(),
-    #                         self.var_course3.get(),
-    #                         self.var_course4.get(),
-    #                         self.var_gender.get() ,
-    #                         self.var_dob.get(),
-    #                         self.var_radioButton1.get()
-    #                     ),
+    # #                         self.var_fatherNum.get(),
+    # #                         self.var_motherNum.get(),
+    # #                         self.var_course1.get(),
+    # #                         self.var_course2.get(),
+    # #                         self.var_course3.get(),
+    # #                         self.var_course4.get(),
+    # #                         self.var_gender.get() ,
+    # #                         self.var_dob.get(),
+    # #                         self.var_radioButton1.get()
+    # #                     ),
+    # #                 )
+    # #             conn.commit()
+    # #             self.fetch_data()
+    # #             self.reset_data()
+    # #             conn.close()
+
+    # #             # == load predefined data on face frontals from opencv
+
+    # #             cam = cv2.VideoCapture(0)
+    # #             cam.set(3, 640)  # set video width
+    # #             cam.set(4, 480)  # set video height
+
+    # #             face_detector = cv2.CascadeClassifier(
+    # #                 "haarcascade_frontalface_default.xml"
+    # #             )
+
+    # #             count = 0
+
+    # #             while True:
+
+    # #                 ret, img = cam.read()
+    # #                 # img = cv2.flip(img, -1) # flip video image vertically
+    # #                 if ret == False:
+    # #                     continue
+
+    # #                 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # #                 faces = face_detector.detectMultiScale(gray, 1.3, 5)
+
+    # #                 for (x, y, w, h) in faces:
+
+    # #                     cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+    # #                     count += 1
+
+    # #                     # Save the captured image into the datasets folder
+    # #                     cv2.imwrite(
+    # #                         "dataset/"
+    # #                         + str(self.var_stdIdforImage)
+    # #                         + "."
+    # #                         + str(count)
+    # #                         + ".jpg",
+    # #                         gray[y : y + h, x : x + w],
+    # #                     )
+    # #                     cv2.putText(
+    # #                         img,
+    # #                         str(count),
+    # #                         (50, 50),
+    # #                         cv2.FONT_HERSHEY_COMPLEX,
+    # #                         2,
+    # #                         (0, 255, 0),
+    # #                         2,
+    # #                     )
+
+    # #                     cv2.imshow("image", img)
+
+    # #                 k = cv2.waitKey(100) & 0xFF  # Press 'ESC' for exiting video
+    # #                 if k == 27:  # escape key ASCII Value
+    # #                     break
+    # #                 elif count >= 5:  # Take 100 face sample and stop video
+    # #                     break
+
+    # #             cam.release()
+    # #             cv2.destroyAllWindows()
+
+    # #             # messagebox.showinfo("Training","Please wait while we are training the images")
+
+    #             # ======== Training Data ========== #
+
+    #             # Path for face image database
+    #             path = "dataset"
+
+    #             recognizer = cv2.face.LBPHFaceRecognizer_create()
+    #             detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+
+    #             # function to get the images and label data
+    #             def getImagesAndLabels(path):
+
+    #                 imagePaths = [os.path.join(path, f) for f in os.listdir(path)]
+
+    #                 if "dataset/" + ".DS_Store" in imagePaths:
+    #                     imagePaths.remove("dataset/" + ".DS_Store")
+
+    #                 faceSamples = []
+    #                 ids = []
+
+    #                 for imagePath in imagePaths:
+
+    #                     PIL_img = Image.open(imagePath).convert(
+    #                         "L"
+    #                     )  # convert it to grayscale
+    #                     img_numpy = np.array(PIL_img, "uint8")
+
+    #                     id = int(os.path.split(imagePath)[-1].split(".")[0])
+    #                     faces = detector.detectMultiScale(img_numpy)
+
+    #                     for (x, y, w, h) in faces:
+    #                         faceSamples.append(img_numpy[y : y + h, x : x + w])
+    #                         ids.append(id)
+
+    #                 return faceSamples, ids
+
+    #             print("\n [INFO] Training faces. It will take a few seconds. Wait ...")
+    #             faces, ids = getImagesAndLabels(path)
+    #             recognizer.train(faces, np.array(ids))
+
+    #             # Save the model into trainer/trainer.yml
+    #             recognizer.write(
+    #                 "trainer/trainer.yml"
+    #             )  # recognizer.save() worked on Mac, but not on Pi
+
+    #             # Print the numer of faces trained and end program
+    #             print(
+    #                 "\n [INFO] {0} faces trained. Exiting Program".format(
+    #                     len(np.unique(ids))
     #                 )
-    #             conn.commit()
-    #             self.fetch_data()
-    #             self.reset_data()
-    #             conn.close()
-
-    #             # == load predefined data on face frontals from opencv
-
-    #             cam = cv2.VideoCapture(0)
-    #             cam.set(3, 640)  # set video width
-    #             cam.set(4, 480)  # set video height
-
-    #             face_detector = cv2.CascadeClassifier(
-    #                 "haarcascade_frontalface_default.xml"
     #             )
 
-    #             count = 0
+    #             # ======================================================================================#
 
-    #             while True:
+    #             messagebox.showinfo(
+    #                 "Result", "Successfully generated the dataset and trained the model"
+    #             )
 
-    #                 ret, img = cam.read()
-    #                 # img = cv2.flip(img, -1) # flip video image vertically
-    #                 if ret == False:
-    #                     continue
-
-    #                 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    #                 faces = face_detector.detectMultiScale(gray, 1.3, 5)
-
-    #                 for (x, y, w, h) in faces:
-
-    #                     cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-    #                     count += 1
-
-    #                     # Save the captured image into the datasets folder
-    #                     cv2.imwrite(
-    #                         "dataset/"
-    #                         + str(self.var_stdIdforImage)
-    #                         + "."
-    #                         + str(count)
-    #                         + ".jpg",
-    #                         gray[y : y + h, x : x + w],
-    #                     )
-    #                     cv2.putText(
-    #                         img,
-    #                         str(count),
-    #                         (50, 50),
-    #                         cv2.FONT_HERSHEY_COMPLEX,
-    #                         2,
-    #                         (0, 255, 0),
-    #                         2,
-    #                     )
-
-    #                     cv2.imshow("image", img)
-
-    #                 k = cv2.waitKey(100) & 0xFF  # Press 'ESC' for exiting video
-    #                 if k == 27:  # escape key ASCII Value
-    #                     break
-    #                 elif count >= 5:  # Take 100 face sample and stop video
-    #                     break
-
-    #             cam.release()
-    #             cv2.destroyAllWindows()
-
-    #             # messagebox.showinfo("Training","Please wait while we are training the images")
-
-                # ======== Training Data ========== #
-
-                # Path for face image database
-                path = "dataset"
-
-                recognizer = cv2.face.LBPHFaceRecognizer_create()
-                detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-
-                # function to get the images and label data
-                def getImagesAndLabels(path):
-
-                    imagePaths = [os.path.join(path, f) for f in os.listdir(path)]
-
-                    if "dataset/" + ".DS_Store" in imagePaths:
-                        imagePaths.remove("dataset/" + ".DS_Store")
-
-                    faceSamples = []
-                    ids = []
-
-                    for imagePath in imagePaths:
-
-                        PIL_img = Image.open(imagePath).convert(
-                            "L"
-                        )  # convert it to grayscale
-                        img_numpy = np.array(PIL_img, "uint8")
-
-                        id = int(os.path.split(imagePath)[-1].split(".")[0])
-                        faces = detector.detectMultiScale(img_numpy)
-
-                        for (x, y, w, h) in faces:
-                            faceSamples.append(img_numpy[y : y + h, x : x + w])
-                            ids.append(id)
-
-                    return faceSamples, ids
-
-                print("\n [INFO] Training faces. It will take a few seconds. Wait ...")
-                faces, ids = getImagesAndLabels(path)
-                recognizer.train(faces, np.array(ids))
-
-                # Save the model into trainer/trainer.yml
-                recognizer.write(
-                    "trainer/trainer.yml"
-                )  # recognizer.save() worked on Mac, but not on Pi
-
-                # Print the numer of faces trained and end program
-                print(
-                    "\n [INFO] {0} faces trained. Exiting Program".format(
-                        len(np.unique(ids))
-                    )
-                )
-
-                # ======================================================================================#
-
-                messagebox.showinfo(
-                    "Result", "Successfully generated the dataset and trained the model"
-                )
-
-            except Exception as es:
-                messagebox.showerror("Error", f"Due To: {str(es)}", parent=self.root)
+            # except Exception as es:
+            #     messagebox.showerror("Error", f"Due To: {str(es)}", parent=self.root)
 
 
 if __name__ == "__main__":
