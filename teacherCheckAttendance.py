@@ -7,6 +7,7 @@ from tkinter import messagebox
 import pandas as pd
 import mysql.connector
 import os
+from tkinter import filedialog
 
 
 class Student_attendance:  
@@ -264,6 +265,7 @@ class Student_attendance:
 
         exportAll_btn = Button(
             Search_frame,
+            command = self.export_data,
             width=20,
             text="Export All Attendance",
             font=("time new roman", 15, "bold"),
@@ -356,7 +358,7 @@ class Student_attendance:
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Shiv@2000",
+            password="12345",
             database="Face_Recognition_db",
             auth_plugin="mysql_native_password",
         )
@@ -379,7 +381,7 @@ class Student_attendance:
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Shiv@2000",
+            password="12345",
             database="Face_Recognition_db",
             auth_plugin="mysql_native_password",
         )
@@ -445,7 +447,7 @@ class Student_attendance:
             conn = mysql.connector.connect(
                     host="localhost",
                     user="root",
-                    password="Shiv@2000",
+                    password="12345",
                     database="face_recognition_db",
                     auth_plugin="mysql_native_password",
                 )
@@ -468,7 +470,115 @@ class Student_attendance:
             self.fetch_data()
             conn.close()
         except mysql.connector.Error as e:
-            print(e)      
+            print(e)   
+
+
+    #################################################################################################################################
+
+    def export_data(self):
+        # if (self.var_course==""):
+        #      messagebox.showerror("Error", "Enter the course name", parent=self.root)
+
+        
+        # roll = self.var_rollNumText
+        # roll = "'" + self.var_rollNumText.get() + "'"
+        year=self.mydata[0]
+        batch=self.mydata[2]
+        course=self.mydata[3] 
+        table_name = year  + "_" + batch  + "_" + course
+        # table_name =   self.var_yearText.get() + "_" + self.var_batchText.get() + "_" + self.var_course.get() 
+
+        try: # Now we will connect with SQL
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="12345",
+                database="face_recognition_db",
+                auth_plugin="mysql_native_password",
+            )
+
+            # ===================cursor 0============================= --- Getting the columns
+            my_cursor = conn.cursor() 
+            #sql = 'select * from {} where Enroll_no={}'.format(str(table_name),str(roll))
+            sql = 'select * from {}'.format(str(table_name))
+            df=pd.read_sql(sql,con=conn)
+            df.to_csv("ai.csv")
+
+            # my_cursor.execute('describe student') ############################################## Insert the table name
+            # data = my_cursor.fetchall()
+            # print(data)
+
+            
+            
+            # for i in range(len(data)):
+            #     self.column_list.append(data[i][0])
+
+            # print(self.column_list)
+
+            # #===================cursor 1============================= --- Getting the student data
+            # my_cursor1 = conn.cursor() # To store the values given by the user
+            
+            # sql = 'select * from student where Enroll_no={}'.format(str(roll))  ############################################## Insert the table name
+            # print(sql)
+            # my_cursor1.execute(sql)
+            # info = my_cursor1.fetchall()
+            # print("Info ",info)
+
+            # self.new_data = list(info[0])
+            # print(self.new_data)
+
+
+            # ### Converting those two lists to dataframe
+            # df = pd.DataFrame([self.new_data], columns = self.column_list)
+            # print(df)
+            myData=df.values.tolist()
+
+            try:
+                if len(myData) < 1:
+                    messagebox.showerror(
+                        "No Data", "No Data Found To Export", parent=self.root
+                    )
+                    return False
+
+                fln = filedialog.asksaveasfilename(
+                    initialdir=os.getcwd(),
+                    title="Open CSV",
+                    filetypes=[("csv", ".CSV")],
+
+                    #filetypes=(("CSV File", "*.csv"), ("All File", "*.*")),
+                    parent=self.root,
+                )
+                fln=fln+".csv"
+                df.to_csv(fln,index=False)
+
+                if fln != ".csv":
+                    messagebox.showinfo(
+                    "Data Exported",
+                    "Your Data Exported to " + os.path.basename(fln) + " successfully", parent=self.root
+                    )
+
+                # with open(fln, mode="w", newline="") as myfile:
+                #     #myfile=myfile+".csv"
+                #     # exp_write = csv.writer(myfile, delimiter=",")
+                #     # for i in myData:
+                #     #     exp_write.writerow(i)
+                
+
+            except Exception as es:
+                messagebox.showerror("Error", f"Due to : {str(es)}", parent=self.root)
+            #df.to_csv('Cou.csv', index = False)
+
+        
+
+
+            conn.commit()
+            #self.fetch_data()
+            conn.close() 
+            
+        except Exception as es:
+            messagebox.showerror("Error","User not registered", parent=self.root)
+
+
 
 if __name__ == "__main__":
     root = Tk()

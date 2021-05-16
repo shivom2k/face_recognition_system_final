@@ -1,24 +1,33 @@
 from tkinter import *
 from tkinter import ttk  # ttk is used for styling
 from PIL import Image, ImageTk
+from main import face_recognition_system
+from tkinter import messagebox
+import mysql.connector
+import smtplib
+import numpy as np
+import random
+import datetime 
 
 
-class login:
+
+class forgotPassword:
     def __init__(self, root):
         self.root = root
         self.root.geometry("1550x900+0+0")
         self.root.title("Face Recognition Attendance System")
 
         # ======= Variables ============
-        self.var_memType = StringVar()  # memberType
-        
+        # self.var_memType = StringVar()  # memberType
+        # self.var_rollNum = StringVar()
+        # self.var_password = StringVar()
         self.var_get_email = StringVar()  # memberType
         self.var_otp = StringVar()
         self.final_otp = ""
         self.var_password = StringVar()
         self.var_password_again = StringVar()
         self.var_after_5_min = ''
-        
+        self.var_memType = StringVar()
 
         # img1 = main background
         img1 = Image.open("Images/thapar1.jpeg")
@@ -36,7 +45,7 @@ class login:
 
         # login frame
         login_frame = Frame(bg_img, bd=2, bg="white", highlightthickness=5)
-        login_frame.place(x=510, y=220, width=500, height=320)
+        login_frame.place(x=510, y=220, width=500, height=360)
 
         login_frame.config(highlightbackground="black", highlightcolor="black")
 
@@ -70,7 +79,7 @@ class login:
         # otp button
         otpSend_btn = Button(
             login_frame,
-            # command=self.add_data,
+            command=self.get_otp,
             highlightthickness=1,
             width=17,
             height=2,
@@ -133,10 +142,37 @@ class login:
         )
         password_entry.place(x=275, y=200, anchor=NW)
 
+        # memberType label
+        memType_label = Label(
+            login_frame,
+            text="Member Type",
+            font=("times new roman", 17),
+            bg="white",
+        )
+        memType_label.place(x=50, y=250, anchor=NW)
+
+        # combo is used for dropdown like entering text
+        memType_combo = ttk.Combobox(
+            login_frame,
+            textvariable=self.var_memType,
+            font=("times new roman", 15),
+            state="readonly",
+            width=17,
+        )
+        memType_combo["values"] = (
+            "",
+            "Student",
+            "Teacher",
+            "Admin",
+        )
+        memType_combo.current(0)  # to give the bydeafault index
+
+        memType_combo.place(x=275, y=250, anchor=NW)
+
         # update button
         update_btn = Button(
             login_frame,
-            # command=self.add_data,
+            command=self.update_otp,
             width=48,
             height=2,
             text="Update Password",
@@ -145,30 +181,32 @@ class login:
             fg="black",
         )
 
-        update_btn.place(x=50, y=250, anchor=NW)
+        update_btn.place(x=50, y=300, anchor=NW)
 
     # ---- functions -----#
     def get_otp(self):
         if (
             self.var_get_email.get() == ""
+            or self.var_memType.get() == ""
         ):
             messagebox.showerror("Error", "All Fields are required", parent=self.root)
 
         else:
             temp_email = self.var_get_email.get()
+            table_name = self.var_memType.get()
             
             try: # Now we will connect with SQL
                 conn = mysql.connector.connect(
                     host="localhost",
                     user="root",
                     password="12345",
-                    database="face_recogniser",
+                    database="face_recognition_db",
                     auth_plugin="mysql_native_password",
                 )
                 my_cursor = conn.cursor() # To store the values given by the user
                 temp_email1 = "'"+temp_email+"'"
                 print(temp_email1)
-                sql = 'select email from credentials where email={}'.format(str(temp_email1))
+                sql = 'select email from {} where email={}'.format(str(table_name),str(temp_email1))
                 my_cursor.execute(sql)
 
                 my_email = my_cursor.fetchall()
@@ -221,8 +259,72 @@ class login:
             else:
                 messagebox.showerror("Error", "Invalid Email (Enter the registered thapar mail", parent=self.root)
 
+            
+    def update_otp(self):
+        if (
+            self.var_otp.get() == ""
+            or self.var_password.get() == ""
+            or self.var_password_again.get() == ""
+            or self.var_get_email.get()==""
+            or self.var_memType.get() == ""
+        ):
+            messagebox.showerror("Error", "All Fields are required", parent=self.root)
+            
+        else:
+            now_time = datetime.datetime.now()
+            table_name = self.var_memType.get()
+
+            if now_time < self.var_after_5_min:
+                temp_otp = self.var_otp.get()
+                temp_password = self.var_password.get()
+                temp_password_again = self.var_password_again.get()
+                temp_email = self.var_get_email.get()
+
+                print(temp_otp)
+                print(self.final_otp)
+
+                if str(temp_password) == str(temp_password_again):
+
+                    if str(temp_otp) == str(self.final_otp):
+                        try: 
+                            conn = mysql.connector.connect(
+                                host="localhost",
+                                user="root",
+                                password="12345",
+                                database="face_recognition_db",
+                                auth_plugin="mysql_native_password",
+                            )
+                            my_cursor = conn.cursor() # To store the values given by the user
+                            password1 = "'"+temp_password+"'"
+                            temp_email1 = "'"+temp_email+"'"
+
+                            sql = "UPDATE {} SET password = {} WHERE email = {} ".format(str(table_name),str(password1),str(temp_email1))
+                            my_cursor.execute(sql)
+                            
+                            #password = my_cursor.fetchall()
+                            
+
+
+                            conn.commit()
+                            #self.fetch_data()
+                            conn.close() # Closing teh connection
+
+                            messagebox.showinfo("Success", "Student details have been added successfully", parent=self.root)
+                            
+                        except Exception as es:
+                            messagebox.showerror("Error", f"Due to : {str(es)}", parent=self.root)
+
+                    else:
+                        messagebox.showerror("Error", "Invalid OTP", parent=self.root)
+
+                else:
+                    messagebox.showerror("Error", "Both passwords do not match", parent=self.root)
+
+            else: 
+                messagebox.showerror("Error", "Login Session expired.", parent=self.root)
+
 
 if __name__ == "__main__":
     root = Tk()
-    obj = login(root)
+    obj = forgotPassword(root)
     root.mainloop()

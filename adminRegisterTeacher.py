@@ -3,32 +3,15 @@ from tkinter import ttk
 import tkinter  # ttk is used for styling
 from PIL import Image, ImageTk
 from tkcalendar import Calendar, DateEntry
-from tkinter import messagebox
-
-import numpy as np
-import cv2
-import mysql.connector
-import os
 
 
-
-class teacherRegister:
+class adminTeacherRegister:
     def __init__(self, root):
         self.root = root
         self.root.geometry("1550x900+0+0")
         self.root.title("Face Recognition Attendance System")
 
         # ======= Variables ============
-        self.var_id = StringVar()
-        self.var_name = StringVar()
-        self.var_phone = StringVar()
-        self.var_email = StringVar()
-        self.var_gender = StringVar()
-        self.var_course1 = StringVar()
-        self.var_course2 = StringVar()
-        self.var_course3 = StringVar()
-        self.var_password = StringVar()
-        self.var_confirm_password = StringVar()
 
         # img1 = main background
         img1 = Image.open("Images/bg2.jpeg")
@@ -73,7 +56,7 @@ class teacherRegister:
 
         teacherID_entry = ttk.Entry(
             register_frame,
-            textvariable=self.var_id,
+            # textvariable=self.var_rollNum,
             width=22,
             font=("times new roman", 13),
         )
@@ -90,7 +73,7 @@ class teacherRegister:
 
         name_entry = ttk.Entry(
             register_frame,
-            textvariable=self.var_name,
+            # textvariable=self.var_name,
             width=22,
             font=("times new roman", 13),
         )
@@ -107,7 +90,7 @@ class teacherRegister:
 
         phone_entry = ttk.Entry(
             register_frame,
-            textvariable=self.var_phone ,
+            # textvariable=self.var_rollNum,
             width=22,
             font=("times new roman", 13),
         )
@@ -124,7 +107,7 @@ class teacherRegister:
 
         email_entry = ttk.Entry(
             register_frame,
-            textvariable=self.var_email ,
+            # textvariable=self.var_rollNum,
             width=22,
             font=("times new roman", 13),
         )
@@ -142,7 +125,7 @@ class teacherRegister:
         # combo is used for dropdown like entering text
         gender_combo = ttk.Combobox(
             register_frame,
-            textvariable=self.var_gender,
+            # textvariable=self.var_memType,
             font=("times new roman", 15),
             state="readonly",
             width=18,
@@ -164,19 +147,18 @@ class teacherRegister:
         # combo is used for dropdown like entering text
         course_1_combo = ttk.Combobox(
             register_frame,
-            textvariable=self.var_course1 ,
+            # textvariable=self.var_memType,
             font=("times new roman", 15),
             state="readonly",
             width=18,
         )
         course_1_combo["values"] = (
             "",
-            "UCS411_AI",
-            "UCS414_CN",
-            "UCS310_DBMS",
-            "UMA035_OT",
-            "UCS503_SE",
-            "ECE202_Elec",
+            "UCS411 - AI",
+            "UCS414 - CN",
+            "UCS310 - DBMS",
+            "UMA035 - OT",
+            "UCS503 - SE",
         )
         course_1_combo.current(0)  # to give the bydeafault index
 
@@ -194,19 +176,18 @@ class teacherRegister:
         # combo is used for dropdown like entering text
         course_2_combo = ttk.Combobox(
             register_frame,
-            textvariable=self.var_course2,
+            # textvariable=self.var_memType,
             font=("times new roman", 15),
             state="readonly",
             width=18,
         )
         course_2_combo["values"] = (
             "",
-            "UCS411_AI",
-            "UCS414_CN",
-            "UCS310_DBMS",
-            "UMA035_OT",
-            "UCS503_SE",
-            "ECE202_Elec",
+            "UCS411 - AI",
+            "UCS414 - CN",
+            "UCS310 - DBMS",
+            "UMA035 - OT",
+            "UCS503 - SE",
         )
         course_2_combo.current(0)  # to give the bydeafault index
 
@@ -224,19 +205,18 @@ class teacherRegister:
         # combo is used for dropdown like entering text
         course_3_combo = ttk.Combobox(
             register_frame,
-            textvariable=self.var_course3,
+            # textvariable=self.var_memType,
             font=("times new roman", 15),
             state="readonly",
             width=18,
         )
         course_3_combo["values"] = (
             "",
-            "UCS411_AI",
-            "UCS414_CN",
-            "UCS310_DBMS",
-            "UMA035_OT",
-            "UCS503_SE",
-            "ECE202_Elec",
+            "UCS411 - AI",
+            "UCS414 - CN",
+            "UCS310 - DBMS",
+            "UMA035 - OT",
+            "UCS503 - SE",
         )
         course_3_combo.current(0)  # to give the bydeafault index
 
@@ -253,7 +233,7 @@ class teacherRegister:
 
         pass_entry = ttk.Entry(
             register_frame,
-            textvariable=self.var_password,
+            # textvariable=self.var_rollNum,
             width=22,
             font=("times new roman", 13),
         )
@@ -270,7 +250,7 @@ class teacherRegister:
 
         confirmPass_entry = ttk.Entry(
             register_frame,
-            textvariable=self.var_confirm_password,
+            # textvariable=self.var_rollNum,
             width=22,
             font=("times new roman", 13),
         )
@@ -281,7 +261,7 @@ class teacherRegister:
         # save button
         save_btn = Button(
             register_frame,
-            command=self.add_data,
+            # command=self.add_data,
             width=44,
             height=2,
             text="Save Details",
@@ -293,60 +273,9 @@ class teacherRegister:
         save_btn.place(x=10, y=630, anchor=NW)
 
     # ------- Functions --------------------------------------#
-    def add_data(self): # Add this in 'save' button, so that this functinality will work for the 'save' button
-        if (
-            self.var_id.get() == ""
-            or self.var_name.get() == ""
-            or self.var_phone.get() == ""
-            or self.var_email.get() == ""
-            or self.var_gender.get() == ""
-            # or self.var_course1.get() == ""
-            # or self.var_course2.get() == ""
-            # or self.var_course3.get() == ""
-            or self.var_password.get() == ""
-        ):
-            messagebox.showerror("Error", "All Fields are required", parent=self.root)  # Messagebox to show the error and parent=self.root to show the message in the same window is any of the fields would be missing
-        
-        else: # Ab agar data aa jata hai to usse database mein save karna hai
-            temp_cpass=self.var_confirm_password.get()
-            temp_pass=self.var_password.get()            
-            
-            if str(temp_cpass) == str(temp_pass):
-                
-                try: # Now we will connect with SQL
-                    conn = mysql.connector.connect(
-                        host="localhost",
-                        user="root",
-                        password="12345",
-                        database="face_recognition_db",
-                        auth_plugin="mysql_native_password",
-                    )
-                    my_cursor = conn.cursor() # To store the values given by the user
-                    my_cursor.execute(
-                        "insert into teacher values(%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                        (
-                            self.var_id.get(),
-                            self.var_name.get(),                   
-                            self.var_phone.get(),
-                            self.var_email.get(),
-                            self.var_gender.get(),
-                            self.var_course1.get(),
-                            self.var_course2.get(),
-                            self.var_course3.get(),
-                            self.var_password.get()
-                        ),
-                    )
-                    conn.commit()
-                    #self.fetch_data()
-                    conn.close() # Closing teh connection
-                    messagebox.showinfo("Success","Teacher details have been added successfully", parent=self.root) # To showthe sccess message on parent which is self.root
-                    
-                except Exception as es:
-                    messagebox.showerror("Error", f"Due to : {str(es)}", parent=self.root)
-            else:
-                messagebox.showerror("password does not match", parent=self.root)
+
 
 if __name__ == "__main__":
     root = Tk()
-    obj = teacherRegister(root)
+    obj = adminTeacherRegister(root)
     root.mainloop()

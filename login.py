@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 from main import face_recognition_system
 from tkinter import messagebox
 import mysql.connector
-from forgot import forgot_password
+from forgotPasswordNew import forgotPassword
 from registerStudent import studentRegister
 from registerTeacher import teacherRegister
 from studentMainPage import studentMainPage
@@ -204,14 +204,14 @@ class login:
             temp_email = self.var_email.get()
             temp_password = self.var_password.get()
             temp_table_name = self.var_memType.get()
-            temp_mem=self.var_memType.get();
+            temp_mem=self.var_memType.get()
             password = ""
 
             try: # Now we will connect with SQL
                 conn = mysql.connector.connect(
                     host="localhost",
                     user="root",
-                    password="Shiv@2000",
+                    password="12345",
                     database="face_recognition_db",
                     auth_plugin="mysql_native_password",
                 )
@@ -295,7 +295,7 @@ class login:
 
     def forgot_details(self):
         self.new_window = Toplevel(self.root) # This asks where we want to open our window
-        self.app = forgot_password(self.new_window)
+        self.app = forgotPassword(self.new_window)
 
         
 
