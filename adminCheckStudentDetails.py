@@ -44,7 +44,7 @@ class adminCheckStudentDetails:
         self.var_phone = StringVar()
         # self.var_password = StringVar()
         # self.var_confirm_password = StringVar()
-        self.var_dob = StringVar()
+        #self.var_dob = StringVar()
         self.var_fatherNum = StringVar()
         self.var_motherNum = StringVar()
         self.var_gender = StringVar()
@@ -53,10 +53,10 @@ class adminCheckStudentDetails:
         self.var_course3 = StringVar()
         self.var_course4 = StringVar()
         self.var_old_roll = ""
-
+        self.var_password=""
         self.var_stdIdforImage = ""
         self.var_radioButton1 = StringVar()
-
+        self.var_defaultDob=StringVar()
         # img1 = main background
         img1 = Image.open("Images/bg_Student.jpeg")
         img1 = img1.resize((1550, 900), Image.ANTIALIAS)
@@ -161,7 +161,7 @@ class adminCheckStudentDetails:
             state="readonly",
             width=17,
         )
-        year_combo["values"] = ("Select Year", "2021", "2022", "2023")
+        year_combo["values"] = ("Select Year", "I", "II", "III")
         year_combo.current(0)  # to give the bydeafault index
         year_combo.place(x=150, y=150, anchor=NW)
 
@@ -211,7 +211,7 @@ class adminCheckStudentDetails:
             "CSE",
             "COE",
             "COBS",
-            "IT",
+            "IT"
         )
         dep_combo.current(0)  # to give the bydeafault index
         dep_combo.place(x=150, y=290, anchor=NW)
@@ -232,7 +232,7 @@ class adminCheckStudentDetails:
             state="readonly",
             width=17,
         )
-        batch_combo["values"] = ("", "2CS9", "2CS10", "2CS11", "2CS12")
+        batch_combo["values"] = ("", "2EE9", "2CS10", "2CS11", "2CS12")
         batch_combo.current(0)  # to give the bydeafault index
 
         batch_combo.place(x=150, y=360, anchor=NW)
@@ -438,7 +438,7 @@ class adminCheckStudentDetails:
 
         dob_entry = ttk.Entry(
             class_Student_frame,
-            textvariable=self.var_dob,
+            textvariable=self.var_defaultDob,
             width=17,
             font=("times new roman", 13, "bold"),
         )
@@ -532,7 +532,7 @@ class adminCheckStudentDetails:
         # delete button
         delete_btn = Button(
             btn_frame,
-            command=self.delete_data,
+            #command=self.delete_data,
             width=24,
             height=2,
             text="Delete",
@@ -562,7 +562,7 @@ class adminCheckStudentDetails:
 
         take_photo_btn = Button(
             btn_frame1,
-            command=self.generate_dataset,
+            #command=self.generate_dataset,
             width=47,
             height=2,
             text="Take Photo Sample",
@@ -783,7 +783,7 @@ class adminCheckStudentDetails:
     #             conn = mysql.connector.connect(
     #                 host="localhost",
     #                 user="root",
-    #                 password="12345",
+    #                 password="Shiv@2000",
     #                 database="Face_Recognition_db",
     #                 auth_plugin="mysql_native_password",
     #             )
@@ -830,7 +830,7 @@ class adminCheckStudentDetails:
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="12345",
+            password="Shiv@2000",
             database="Face_Recognition_db",
             auth_plugin="mysql_native_password",
         )
@@ -863,7 +863,7 @@ class adminCheckStudentDetails:
         # conn = mysql.connector.connect(
         #     host="localhost",
         #     user="root",
-        #     password="12345",
+        #     password="Shiv@2000",
         #     database="Face_Recognition_db",
         #     auth_plugin="mysql_native_password",
         # )
@@ -915,7 +915,7 @@ class adminCheckStudentDetails:
         self.var_name.set(data[1]) ,
         self.var_year.set(data[2]) ,
         self.var_semester.set(data[3]),
-        self.var_dep.set([data[4]]),
+        self.var_dep.set(data[4]),
         self.var_batch.set(data[5]),
         self.var_email.set(data[6]) ,
         self.var_phone.set(data[7]) ,
@@ -928,7 +928,30 @@ class adminCheckStudentDetails:
         self.var_course3.set(data[12]),
         self.var_course4.set(data[13]),
         self.var_gender.set(data[14]) ,
-        self.var_dob.set(data[15]),
+        self.var_defaultDob.set(data[15]),
+        self.var_old_roll=data[0]
+        print("Self.va",self.var_old_roll)
+        try: # Now we will connect with SQL
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="Shiv@2000",
+                database="face_recognition_db",
+                auth_plugin="mysql_native_password",
+            )
+
+            my_cursor = conn.cursor()
+            sql = "select password from student where enroll_No=%s"
+            val = (self.var_old_roll,)
+            my_cursor.execute(sql,val)
+            password=my_cursor.fetchall()
+            print("password",password)
+            self.var_password=password[0][0]
+            conn.commit()
+            # self.fetch_data()
+            conn.close() # Closing teh connection
+        except Exception as es:
+            messagebox.showerror("Error", f"Due to : {str(es)}", parent=self.root)
         # self.var_radioButton1.set(data[16]),
 
     # # ======= update function ======= #
@@ -968,7 +991,7 @@ class adminCheckStudentDetails:
     #                 conn = mysql.connector.connect(
     #                     host="localhost",
     #                     user="root",
-    #                     password="12345",
+    #                     password="Shiv@2000",
     #                     database="Face_Recognition_db",
     #                     auth_plugin="mysql_native_password",
     #                 )
@@ -1034,139 +1057,139 @@ class adminCheckStudentDetails:
     #         except Exception as es:
     #             messagebox.showerror("Error", f"Due To: {str(es)}", parent=self.root)
 
-    def update_data(self):
-        if (
-            self.var_rollNum.get() == ""
-            or self.var_name.get() == ""
-            or self.var_year.get() == "Select Year"
-            or self.var_semester.get() == "Select Semester"
-            or self.var_dep.get() == "Select Department" 
-            or self.var_batch.get() == ""
-            or self.var_email.get() == ""
-            or self.var_phone.get() == ""
-            or self.var_dob.get() == ""
-            or self.var_fatherNum.get() == ""
-            or self.var_motherNum.get() == ""
-            or self.var_gender.get() == ""
-            or self.var_course1.get() == "Select Course"
-            or self.var_course2.get() == "Select Course"
-            or self.var_course3.get() == "Select Course"
-            or self.var_course4.get() == "Select Course"
-        ):
-            messagebox.showerror("Error", "All Fields are required", parent=self.root)
-        else:
-            try:
-                Update = messagebox.askyesno(
-                    "Update",
-                    "Do you want to update the student details",
-                    parent=self.root,
-                )
-                if Update > 0:
-                    conn = mysql.connector.connect(
-                        host="localhost",
-                        user="root",
-                         password="Shiv@2000",
-                         database="face_recognizer",
-                        auth_plugin="mysql_native_password",
-                    )
+    # def update_data(self):
+    #     if (
+    #         self.var_rollNum.get() == ""
+    #         or self.var_name.get() == ""
+    #         or self.var_year.get() == "Select Year"
+    #         or self.var_semester.get() == "Select Semester"
+    #         or self.var_dep.get() == "Select Department" 
+    #         or self.var_batch.get() == ""
+    #         or self.var_email.get() == ""
+    #         or self.var_phone.get() == ""
+    #         or self.var_dob.get() == ""
+    #         or self.var_fatherNum.get() == ""
+    #         or self.var_motherNum.get() == ""
+    #         or self.var_gender.get() == ""
+    #         or self.var_course1.get() == "Select Course"
+    #         or self.var_course2.get() == "Select Course"
+    #         or self.var_course3.get() == "Select Course"
+    #         or self.var_course4.get() == "Select Course"
+    #     ):
+    #         messagebox.showerror("Error", "All Fields are required", parent=self.root)
+    #     else:
+    #         try:
+    #             Update = messagebox.askyesno(
+    #                 "Update",
+    #                 "Do you want to update the student details",
+    #                 parent=self.root,
+    #             )
+    #             if Update > 0:
+    #                 conn = mysql.connector.connect(
+    #                     host="localhost",
+    #                     user="root",
+    #                      password="Shiv@2000",
+    #                      database="face_recognizer",
+    #                     auth_plugin="mysql_native_password",
+    #                 )
                     
-                    old_roll=self.var_old_roll
-                    my_cursor = conn.cursor()
-                    sql = "delete from student where roll_Num=%s"
-                    val = (self.var_old_roll,)
-                    my_cursor.execute(sql,val)
-                    my_cursor = conn.cursor()
-                    my_cursor.execute(
-                    "insert into student values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                    (
-                        self.var_dep.get(),
-                        self.var_course.get(),
-                        self.var_year.get(),
-                        self.var_semester.get(),
-                        self.var_rollNum.get(),
-                        self.var_std_name.get(),
-                        self.var_batch.get(),
-                        self.var_batchNum.get(),
-                        self.var_gender.get(),
-                        self.var_dob.get(),
-                        self.var_email.get(),
-                        self.var_phone.get(),
-                        self.var_fatherNum.get(),
-                        self.var_motherNum.get(),
-                        self.var_radioButton1.get(),
-                    ),
-                )
-                    # my_cursor.execute(sql,val)
-                    # my_cursor = conn.cursor()
-                    # my_cursor.execute(
-                    #     "update student set Dep=%s, course=%s,year=%s,semester=%s,name=%s,batch=%s,batch_no=%s,gender=%s,dob=%s,email=%s,phone_no=%s,father_no=%s,mother_no=%s,photo_Sample=%s where roll_Num=%s",
-                    #     (
-                    #         self.var_dep.get(),
-                    #         self.var_course.get(),
-                    #         self.var_year.get(),
-                    #         self.var_semester.get(),
-                    #         self.var_std_name.get(),
-                    #         self.var_batch.get(),
-                    #         self.var_batchNum.get(),
-                    #         self.var_gender.get(),
-                    #         self.var_dob.get(),
-                    #         self.var_email.get(),
-                    #         self.var_phone.get(),
-                    #         self.var_fatherNum.get(),
-                    #         self.var_motherNum.get(),
-                    #         self.var_radioButton1.get(),
-                    #         self.var_rollNum.get(),
-                    #     ),
-                    # )
-                else:
-                    if not Update:
-                        return
-                messagebox.showinfo(
-                    "Success", "Student details successfully updated", parent=self.root
-                )
-                conn.commit()
-                self.fetch_data()
-                conn.close()
-            except Exception as es:
-                messagebox.showerror("Error", f"Due To: {str(es)}", parent=self.root)
+    #                 old_roll=self.var_old_roll
+    #                 my_cursor = conn.cursor()
+    #                 sql = "delete from student where roll_Num=%s"
+    #                 val = (self.var_old_roll,)
+    #                 my_cursor.execute(sql,val)
+    #                 my_cursor = conn.cursor()
+    #                 my_cursor.execute(
+    #                 "insert into student values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+    #                 (
+    #                     self.var_dep.get(),
+    #                     self.var_course.get(),
+    #                     self.var_year.get(),
+    #                     self.var_semester.get(),
+    #                     self.var_rollNum.get(),
+    #                     self.var_std_name.get(),
+    #                     self.var_batch.get(),
+    #                     self.var_batchNum.get(),
+    #                     self.var_gender.get(),
+    #                     self.var_dob.get(),
+    #                     self.var_email.get(),
+    #                     self.var_phone.get(),
+    #                     self.var_fatherNum.get(),
+    #                     self.var_motherNum.get(),
+    #                     self.var_radioButton1.get(),
+    #                 ),
+    #             )
+    #                 # my_cursor.execute(sql,val)
+    #                 # my_cursor = conn.cursor()
+    #                 # my_cursor.execute(
+    #                 #     "update student set Dep=%s, course=%s,year=%s,semester=%s,name=%s,batch=%s,batch_no=%s,gender=%s,dob=%s,email=%s,phone_no=%s,father_no=%s,mother_no=%s,photo_Sample=%s where roll_Num=%s",
+    #                 #     (
+    #                 #         self.var_dep.get(),
+    #                 #         self.var_course.get(),
+    #                 #         self.var_year.get(),
+    #                 #         self.var_semester.get(),
+    #                 #         self.var_std_name.get(),
+    #                 #         self.var_batch.get(),
+    #                 #         self.var_batchNum.get(),
+    #                 #         self.var_gender.get(),
+    #                 #         self.var_dob.get(),
+    #                 #         self.var_email.get(),
+    #                 #         self.var_phone.get(),
+    #                 #         self.var_fatherNum.get(),
+    #                 #         self.var_motherNum.get(),
+    #                 #         self.var_radioButton1.get(),
+    #                 #         self.var_rollNum.get(),
+    #                 #     ),
+    #                 # )
+    #             else:
+    #                 if not Update:
+    #                     return
+    #             messagebox.showinfo(
+    #                 "Success", "Student details successfully updated", parent=self.root
+    #             )
+    #             conn.commit()
+    #             self.fetch_data()
+    #             conn.close()
+    #         except Exception as es:
+    #             messagebox.showerror("Error", f"Due To: {str(es)}", parent=self.root)
 
     # ======== delete function ======= #
-    def delete_data(self):
-        if self.var_rollNum.get() == "":
-            messagebox.showerror(
-                "Error", "Student ID must be required", parent=self.root
-            )
-        else:
-            try:
-                delete = messagebox.askyesno(
-                    "Student Delete Page",
-                    "Do you want to delete this student ?",
-                    parent=self.root,
-                )
-                if delete > 0:
-                    conn = mysql.connector.connect(
-                        host="localhost",
-                        user="root",
-                        password="12345",
-                        database="Face_Recognition_db",
-                        auth_plugin="mysql_native_password",
-                    )
-                    my_cursor = conn.cursor()
-                    sql = "delete from student_table where Enroll_no=%s"
-                    val = (self.var_rollNum.get(),)
-                    my_cursor.execute(sql, val)
-                else:
-                    if not delete:
-                        return
+    # def delete_data(self):
+    #     if self.var_rollNum.get() == "":
+    #         messagebox.showerror(
+    #             "Error", "Student ID must be required", parent=self.root
+    #         )
+    #     else:
+    #         try:
+    #             delete = messagebox.askyesno(
+    #                 "Student Delete Page",
+    #                 "Do you want to delete this student ?",
+    #                 parent=self.root,
+    #             )
+    #             if delete > 0:
+    #                 conn = mysql.connector.connect(
+    #                     host="localhost",
+    #                     user="root",
+    #                     password="Shiv@2000",
+    #                     database="Face_Recognition_db",
+    #                     auth_plugin="mysql_native_password",
+    #                 )
+    #                 my_cursor = conn.cursor()
+    #                 sql = "delete from student_table where Enroll_no=%s"
+    #                 val = (self.var_rollNum.get(),)
+    #                 my_cursor.execute(sql, val)
+    #             else:
+    #                 if not delete:
+    #                     return
 
-                conn.commit()
-                self.fetch_data()
-                conn.close()
-                messagebox.showinfo(
-                    "Delete", "Successfully deleted student details", parent=self.root
-                )
-            except Exception as es:
-                messagebox.showerror("Error", f"Due To: {str(es)}", parent=self.root)
+    #             conn.commit()
+    #             self.fetch_data()
+    #             conn.close()
+    #             messagebox.showinfo(
+    #                 "Delete", "Successfully deleted student details", parent=self.root
+    #             )
+    #         except Exception as es:
+    #             messagebox.showerror("Error", f"Due To: {str(es)}", parent=self.root)
 
     # ======== reset function ======== #
     def reset_data(self):
@@ -1194,7 +1217,7 @@ class adminCheckStudentDetails:
         self.var_batch.set("")
         self.var_email.set("")
         self.var_phone.set("")
-        self.var_dob.set("")
+        self.var_defaultDob.set("")
         self.var_fatherNum.set("")
         self.var_motherNum.set("")
         self.var_gender.set("")
@@ -1204,8 +1227,8 @@ class adminCheckStudentDetails:
         self.var_course4.set("Select Course")
 
         self.var_radioButton1.get() == ""
-
-    def add_data(self): # Add this in 'save' button, so that this functinality will work for the 'save' button
+    
+    def update_data(self): # Add this in 'save' button, so that this functinality will work for the 'save' button
         if (
             self.var_rollNum.get() == ""
             or self.var_name.get() ==  ""
@@ -1217,14 +1240,14 @@ class adminCheckStudentDetails:
             or self.var_phone.get() == ""
             or self.var_fatherNum.get() == ""
             or self.var_motherNum.get() == ""
-            or self.var_password.get() == ""
-            or self.var_confirm_password.get() == ""
+            # or self.var_password.get() == ""
+            # or self.var_confirm_password.get() == ""
             or self.var_course1.get() == "Select Course"
             or self.var_course2.get() == "Select Course"
             or self.var_course3.get() == "Select Course"
             or self.var_course4.get() == "Select Course"
             or self.var_gender.get() == ""
-            or self.defaultDob.get() == "Choose Date"
+            or self.var_defaultDob.get() == "Choose Date"
         ):
             messagebox.showerror("Error", "All Fields are required", parent=self.root)  # Messagebox to show the error and parent=self.root to show the message in the same window is any of the fields would be missing
         
@@ -1237,10 +1260,18 @@ class adminCheckStudentDetails:
                 conn = mysql.connector.connect(
                     host="localhost",
                     user="root",
-                    password="12345",
+                    password="Shiv@2000",
                     database="face_recognition_db",
                     auth_plugin="mysql_native_password",
                 )
+
+                my_cursor = conn.cursor()
+                roll1="'"+str(self.var_old_roll)+"'"
+                sql = "delete from student where enroll_No={}".format(str(roll1))
+                print(sql)
+                #print(self)
+                my_cursor.execute(sql)
+
                 my_cursor = conn.cursor() # To store the values given by the user
                 my_cursor.execute(
                     "insert into student values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
@@ -1255,13 +1286,13 @@ class adminCheckStudentDetails:
                         self.var_phone.get() ,
                         self.var_fatherNum.get(),
                         self.var_motherNum.get(),
-                        self.var_password.get(),
+                        self.var_password,
                         self.var_course1.get(),
                         self.var_course2.get(),
                         self.var_course3.get(),
                         self.var_course4.get(),
                         self.var_gender.get(),
-                        self.defaultDob.get()
+                        self.var_defaultDob.get()
                     ),
                 )
                 conn.commit()
@@ -1274,12 +1305,12 @@ class adminCheckStudentDetails:
 
             ############2222222222222222222222222222222222222222222222222222222222
             temp_var = self.var_year.get() + "_" + self.var_batch.get()
-
+            temp_dep=self.var_dep.get()
             temp_roll = "'" + self.var_rollNum.get() + "'"
             temp_name = "'" + self.var_name.get()  + "'"
             temp_year = "'" + self.var_year.get()  + "'"
             temp_sem = "'" + self.var_semester.get() + "'"
-            temp_dep = "'" + self.var_dep.get()  + "'"
+            temp_dep1= "'" + temp_dep  + "'"
             temp_batch = "'" + self.var_batch.get() + "'"
             temp_email = "'" + self.var_email.get()  + "'"
             temp_phone = "'" + self.var_phone.get()  + "'"
@@ -1290,24 +1321,33 @@ class adminCheckStudentDetails:
             temp_course3 = "'" + self.var_course3.get() + "'"
             temp_course4 = "'" + self.var_course4.get() + "'"
             temp_gender = "'" + self.var_gender.get() + "'"
-            temp_dob = "'" + self.defaultDob.get() + "'"
+            temp_dob = "'" + self.var_defaultDob.get() + "'"
+            print("dep is",self.var_dep.get())
 
             try: # Now we will connect with SQL
                 conn = mysql.connector.connect(
                     host="localhost",
                     user="root",
-                    password="12345",
+                    password="Shiv@2000",
                     database="face_recognition_db",
                     auth_plugin="mysql_native_password",
                 )
+                
+                my_cursor = conn.cursor()
+                roll2="'"+str(self.var_old_roll)+"'"
+                sql = "delete from {} where enroll_No={}".format(temp_var,roll2)
+                print(sql)
+                # val = (self.var_old_roll,)
+                my_cursor.execute(sql)
                 my_cursor = conn.cursor() # To store the values given by the user
+
                 sql = "insert into {} values({},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{})".format(
                         str(temp_var),
                         temp_roll,
                         temp_name,
                         temp_year,
                         temp_sem,
-                        temp_dep,
+                        temp_dep1,
                         temp_batch,
                         temp_email,
                         temp_phone,
@@ -1323,7 +1363,7 @@ class adminCheckStudentDetails:
                 print(sql)
                 my_cursor.execute(sql)
                 conn.commit()
-                #self.fetch_data()
+                self.fetch_data(temp_var)
                 conn.close() # Closing teh connection
                 messagebox.showinfo("Success","Student details have been added successfully", parent=self.root,) # To showthe sccess message on parent which is self.root
 
@@ -1336,20 +1376,27 @@ class adminCheckStudentDetails:
             temp_var3 = self.var_course3.get() 
             temp_var4 = self.var_course4.get()
             li = [temp_var1, temp_var2, temp_var3, temp_var4]
+            print("li is ",li)
 
             temp_year = self.var_year.get()
             temp_batch = self.var_batch.get()
 
             for i in li:
+
                 temp_var = temp_year + "_" + temp_batch + "_" + str(i)
                 try: # Now we will connect with SQL
                     conn = mysql.connector.connect(
                         host="localhost",
                         user="root",
-                        password="12345",
+                        password="Shiv@2000",
                         database="face_recognition_db",
                         auth_plugin="mysql_native_password",
                     )
+                    # sql = "delete from {} where enroll_No={}".format(temp_var,roll)
+                    # # val = (self.var_old_roll,)
+                    # my_cursor = conn.cursor() # To store the values given by the use
+                    # my_cursor.execute(sql)
+                   
                     my_cursor = conn.cursor() # To store the values given by the user
                     my_cursor.execute(
                         "insert into {} values({})".format(
@@ -1363,7 +1410,8 @@ class adminCheckStudentDetails:
                     # messagebox.showinfo("Success","Student details have been added successfully", parent=self.root,) # To showthe sccess message on parent which is self.root
 
                 except Exception as es:
-                    messagebox.showerror("Error", f"Due to : {str(es)}", parent=self.root)
+                     messagebox.showerror("work done", parent=self.root)
+
                         
                 
 
@@ -1401,7 +1449,7 @@ class adminCheckStudentDetails:
     #                 conn = mysql.connector.connect(
     #                     host="localhost",
     #                     user="root",
-    #                     password="12345",
+    #                     password="Shiv@2000",
     #                     database="Face_Recognition_db",
     #                     auth_plugin="mysql_native_password",
     #                 )
@@ -1502,62 +1550,62 @@ class adminCheckStudentDetails:
                 # ======== Training Data ========== #
 
                 # Path for face image database
-                path = "dataset"
+                # path = "dataset"
 
-                recognizer = cv2.face.LBPHFaceRecognizer_create()
-                detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+                # recognizer = cv2.face.LBPHFaceRecognizer_create()
+                # detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
-                # function to get the images and label data
-                def getImagesAndLabels(path):
+                # # function to get the images and label data
+                # def getImagesAndLabels(path):
 
-                    imagePaths = [os.path.join(path, f) for f in os.listdir(path)]
+                #     imagePaths = [os.path.join(path, f) for f in os.listdir(path)]
 
-                    if "dataset/" + ".DS_Store" in imagePaths:
-                        imagePaths.remove("dataset/" + ".DS_Store")
+                #     if "dataset/" + ".DS_Store" in imagePaths:
+                #         imagePaths.remove("dataset/" + ".DS_Store")
 
-                    faceSamples = []
-                    ids = []
+                #     faceSamples = []
+                #     ids = []
 
-                    for imagePath in imagePaths:
+                #     for imagePath in imagePaths:
 
-                        PIL_img = Image.open(imagePath).convert(
-                            "L"
-                        )  # convert it to grayscale
-                        img_numpy = np.array(PIL_img, "uint8")
+                #         PIL_img = Image.open(imagePath).convert(
+                #             "L"
+                #         )  # convert it to grayscale
+                #         img_numpy = np.array(PIL_img, "uint8")
 
-                        id = int(os.path.split(imagePath)[-1].split(".")[0])
-                        faces = detector.detectMultiScale(img_numpy)
+                #         id = int(os.path.split(imagePath)[-1].split(".")[0])
+                #         faces = detector.detectMultiScale(img_numpy)
 
-                        for (x, y, w, h) in faces:
-                            faceSamples.append(img_numpy[y : y + h, x : x + w])
-                            ids.append(id)
+                #         for (x, y, w, h) in faces:
+                #             faceSamples.append(img_numpy[y : y + h, x : x + w])
+                #             ids.append(id)
 
-                    return faceSamples, ids
+                #     return faceSamples, ids
 
-                print("\n [INFO] Training faces. It will take a few seconds. Wait ...")
-                faces, ids = getImagesAndLabels(path)
-                recognizer.train(faces, np.array(ids))
+                # print("\n [INFO] Training faces. It will take a few seconds. Wait ...")
+                # faces, ids = getImagesAndLabels(path)
+                # recognizer.train(faces, np.array(ids))
 
-                # Save the model into trainer/trainer.yml
-                recognizer.write(
-                    "trainer/trainer.yml"
-                )  # recognizer.save() worked on Mac, but not on Pi
+                # # Save the model into trainer/trainer.yml
+                # recognizer.write(
+                #     "trainer/trainer.yml"
+                # )  # recognizer.save() worked on Mac, but not on Pi
 
-                # Print the numer of faces trained and end program
-                print(
-                    "\n [INFO] {0} faces trained. Exiting Program".format(
-                        len(np.unique(ids))
-                    )
-                )
+                # # Print the numer of faces trained and end program
+                # print(
+                #     "\n [INFO] {0} faces trained. Exiting Program".format(
+                #         len(np.unique(ids))
+                #     )
+                # )
 
-                # ======================================================================================#
+                # # ======================================================================================#
 
-                messagebox.showinfo(
-                    "Result", "Successfully generated the dataset and trained the model"
-                )
+                # messagebox.showinfo(
+                #     "Result", "Successfully generated the dataset and trained the model"
+                # )
 
-            except Exception as es:
-                messagebox.showerror("Error", f"Due To: {str(es)}", parent=self.root)
+            # except Exception as es:
+            #     messagebox.showerror("Error", f"Due To: {str(es)}", parent=self.root)
 
 
 if __name__ == "__main__":

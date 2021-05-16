@@ -199,7 +199,7 @@ class forgotPassword:
                 conn = mysql.connector.connect(
                     host="localhost",
                     user="root",
-                    password="12345",
+                    password="Shiv@2000",
                     database="face_recognition_db",
                     auth_plugin="mysql_native_password",
                 )
@@ -290,7 +290,7 @@ class forgotPassword:
                             conn = mysql.connector.connect(
                                 host="localhost",
                                 user="root",
-                                password="12345",
+                                password="Shiv@2000",
                                 database="face_recognition_db",
                                 auth_plugin="mysql_native_password",
                             )
